@@ -1,6 +1,7 @@
 ### Global .gitignore
 
 TotallySecure.code-workspace
+certs
 
 node_modules
 .env
