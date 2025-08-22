@@ -13,6 +13,9 @@ const options = {
     cert: fs.readFileSync('../certs/server.crt'),
 };
 
-https.createServer(options, app).listen(PORT, () => {
+mongoose.connect(process.env.MONGO_CONNECTION)
+.then(() => {
+    https.createServer(options, app).listen(PORT, () => {
     console.log(`Server running at https://localhost:${PORT}`);
+    });
 });

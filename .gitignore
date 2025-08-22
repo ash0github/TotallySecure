@@ -2,6 +2,7 @@
 
 TotallySecure.code-workspace
 certs
+redacted
 
 node_modules
 .env
