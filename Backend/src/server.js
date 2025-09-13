@@ -18,4 +18,7 @@ mongoose.connect(process.env.MONGO_CONNECTION)
     https.createServer(options, app).listen(PORT, () => {
     console.log(`Server running at https://localhost:${PORT}`);
     });
+})
+.catch((err) => {
+    console.error('MongoDb connection failed. Error:', err);
 });
