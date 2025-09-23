@@ -6,9 +6,9 @@ const userSchema = new mongoose.Schema({
     email: {type: String, unique: true, required: true, lowercase: true, trim: true},
     password: {type: String, unique: false, required: true},
     salt: {type: String, required: true},
-    username: {type: String, unique: true, required: true, trim: true},
+    username: {type: String, unique: false, required: true, trim: true},
     roles: {type: [String], default: ['user']},
     dateOfReg: {type: Date, default: Date.now},
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', userSchema);

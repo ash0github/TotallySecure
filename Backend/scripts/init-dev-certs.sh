@@ -53,7 +53,7 @@ chmod 600 "$KEY_FILE"
 #save working directory for output
 BACKEND_DIR="$(pwd -P)"
 
-#copy over to frontend/certs
+#create directory and copy over to frontend/certs
 cd ../../Frontend
 mkdir -p "$OUT_DIR"
 cd "$OUT_DIR"

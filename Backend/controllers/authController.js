@@ -2,9 +2,18 @@ const jwt = require('jsonwebtoken');
 const argon2 = require('argon2');
 const crypto = require('crypto');
 const User = require('../models/User');
+const Account = require('../models/Account');
 
+//method to generate signed token - expiry: 15 minutes
 const generateToken = (userID) =>
     jwt.sign({id: userID}, process.env.JWT_SECRET, {expiresIn: '900s'});
+
+//method to generate new account object
+const generateAccount = async (accountHolder) => {
+    //creates a new account with the user as the account holder
+    const account = new Account({accountHolder});
+    await account.save();
+}
 
 exports.register = async (req, res) => {
     //get info from request body
@@ -27,6 +36,11 @@ exports.register = async (req, res) => {
         
         //save changes asynchronously
         await user.save();
+
+        //create user account
+        await generateAccount(user._id);
+
+        //return success!
         res.status(201).json({message: "User registered successfully!"});
     }
     catch (err){
