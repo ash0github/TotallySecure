@@ -1,19 +1,13 @@
 import { useState } from 'react'
 import './App.css'
+import Login from './components/Login'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <h1>TotallySecure</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
-    </>
-  )
+        <div className="App">
+            <Login />
+        </div>
+    );
 }
 
 export default App
