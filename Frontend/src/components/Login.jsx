@@ -3,6 +3,7 @@ import './Login.css';
 import loginMoney from '../assets/login_money.svg';
 import eyeIcon from '../assets/password_eye.svg';
 import logo from '../assets/Logo.svg';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [userType, setUserType] = useState('customer');
@@ -126,7 +127,7 @@ const Login = () => {
           </form>
 
           <p className="register-link">
-            Don’t have an account? <a href="/register">Register.</a>
+            Don’t have an account? <Link to="/register">Register.</Link>
           </p>
         </div>
       </div>
