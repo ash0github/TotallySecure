@@ -12,15 +12,31 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log({
-      userType,
-      username,
-      accountNumber,
-      password,
+  // Connects to Backend server  Auth Routes
+const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await fetch("https://localhost:4040/totallysecure/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: username, // or use a separate email field
+        password: password
+      }),
     });
-  };
+
+    const data = await res.json();
+    if (res.ok) {
+      console.log("✅ Login successful:", data);
+      localStorage.setItem("token", data.token); // Save JWT
+      // Redirect to dashboard or protected route
+    } else {
+      alert(data.message || "Login failed");
+    }
+  } catch (err) {
+    console.error("Error logging in:", err);
+  }
+};
 
   return (
     <div className="login-page">

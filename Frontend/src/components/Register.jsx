@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import './Login.css'; // ✅ reuse same styles
+import './Login.css'; 
 import loginMoney from '../assets/login_money.svg';
 import logo from '../assets/Logo.svg';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     surname: '',
+    email: '',
     idNumber: '',
     accountNumber: '',
     password: '',
@@ -18,10 +20,35 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
+  const navigate = useNavigate();
+
+  // Connects to Backend server  Auth Routes
+  const handleRegister = async (e) => {
+  e.preventDefault();
+  try {
+    const res = await fetch("https://localhost:4040/totallysecure/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: formData.email,
+        username: `${formData.firstName} ${formData.surname}`,
+        password: formData.password
+      }),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("✅ Registration successful!");
+      console.log(data);
+      // Redirect to login
+      navigate("/login");
+    } else {
+      alert(data.message || "Registration failed");
+    }
+  } catch (err) {
+    console.error("Error registering:", err);
+  }
+};
 
   return (
     <div className="login-page">
@@ -83,6 +110,19 @@ const Register = () => {
                 required
               />
             </div>
+
+            <div className="input-group">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />  
+             </div>
 
             <div className="input-group">
               <label htmlFor="idNumber">ID Number</label>
