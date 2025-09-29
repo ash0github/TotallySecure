@@ -84,7 +84,7 @@ const handleLogin = async (e) => {
               className={`toggle-btn ${userType === 'customer' ? 'active' : ''}`}
               onClick={() => setUserType('customer')}
             >
-              Customer
+              User
             </button>
             <button
               type="button"
