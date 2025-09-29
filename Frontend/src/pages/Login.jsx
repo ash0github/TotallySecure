@@ -4,6 +4,7 @@ import loginMoney from '../assets/login_money.svg';
 import eyeIcon from '../assets/password_eye.svg';
 import logo from '../assets/Logo.svg';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [userType, setUserType] = useState('customer');
@@ -11,6 +12,7 @@ const Login = () => {
   const [accountNumber, setAccountNumber] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
 
   // Connects to Backend server  Auth Routes
 const handleLogin = async (e) => {
@@ -30,6 +32,7 @@ const handleLogin = async (e) => {
       console.log("✅ Login successful:", data);
       localStorage.setItem("token", data.token); // Save JWT
       // Redirect to dashboard or protected route
+      navigate("/userdashboard");
     } else {
       alert(data.message || "Login failed");
     }
