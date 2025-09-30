@@ -1,0 +1,240 @@
+/* Reset */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+  background-color: #f0f8f0;
+  color: #333;
+}
+
+/* Page */
+.login-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Header */
+.login-header {
+  background-color: #004d00;
+  color: white;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.login-header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.logo {
+  height: 32px;
+}
+
+/* Panels take full screen */
+.login-panels {
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+
+/* Left Panel */
+.left-panel {
+  position: relative;
+  flex: 0.7;
+  background-color: #e8f5e9;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+.left-panel h2 {
+  color: #004d00;
+  margin: 0 0 0.5rem;
+}
+.left-panel p {
+  color: #388e3c;
+  margin-bottom: 1.5rem;
+}
+.money-background {
+  flex-grow: 1;
+  width: 100%;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+}
+
+/* Falling money container */
+.falling-money {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Each money bill */
+.money {
+   position: absolute;
+  top: -10%;
+  /* random left is set inline */
+  width: var(--size);
+  height: var(--size);
+  animation: fallY var(--fall-duration) linear infinite;
+  animation-delay: var(--delay);
+}
+
+.money img {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0.9;
+  animation: swaySpin var(--sway-spin-duration) ease-in-out infinite;
+}
+
+/* Falling animation */
+/* Falling straight down */
+@keyframes fallY {
+  0% { top: -10%; opacity: 1; }
+  100% { top: 110%; opacity: 0.2; }
+}
+
+/* Combined horizontal sway + spin */
+@keyframes swaySpin {
+  0%   { transform: translateX(0) rotate(0deg); }
+  50%  { transform: translateX(30px) rotate(180deg); }
+  100% { transform: translateX(0) rotate(360deg); }
+}
+
+
+/* Right Panel */
+.right-panel {
+  flex: 0.3;
+  padding: 2rem;
+  background-color: #E3EDE5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Toggle */
+.user-type-toggle {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border: 1px solid #a5d6a7;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.toggle-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: #fff;
+  color: #388e3c;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 0px;
+}
+.toggle-btn.active {
+  background: #388e3c;
+  color: #fff;
+  border-radius: 0px;
+}
+.toggle-btn:hover {
+  background: #c8e6c9;
+}
+
+/* Form */
+.input-group {
+  flex: 1;                  
+  display: flex;
+  flex-direction: column;   
+  margin-bottom: 1rem;      
+  text-align: left;        
+}
+
+.input-row {
+  display: flex;
+  gap: 1rem; 
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0 0 0.4rem 0;
+  padding: 0; 
+  font-weight: 500;
+  color: #444;
+  font-size: 0.9rem;
+}
+.input-group input {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.input-group input:focus {
+  border-color: #2e7d32;
+  outline: none;
+}
+
+/* Password */
+.password-wrapper {
+  position: relative;
+}
+.password-toggle-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  width: 20px;
+  opacity: 0.7;
+}
+.password-toggle-icon:hover {
+  opacity: 1;
+}
+
+/* Button */
+.login-btn {
+  width: 100%;
+  padding: 0.8rem;
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 1rem;
+}
+.login-btn:hover {
+  background: #1b5e20;
+}
+
+/* Register */
+.register-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+.register-link a {
+  color: #2e7d32;
+  font-weight: 500;
+  text-decoration: none;
+}
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-panels {
+    flex-direction: column;
+  }
+}
