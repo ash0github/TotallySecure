@@ -85,6 +85,7 @@ const Register = () => {
         {/* Right Panel */}
         <div className="right-panel">
           <form onSubmit={handleRegister}>
+             <div className="input-row">
             <div className="input-group">
               <label htmlFor="firstName">First Name</label>
               <input
@@ -110,7 +111,8 @@ const Register = () => {
                 required
               />
             </div>
-
+          </div>
+            
             <div className="input-group">
                 <label htmlFor="email">Email</label>
                 <input
@@ -186,6 +188,7 @@ const Register = () => {
           </p>
         </div>
       </div>
+      
     </div>
   );
 };
