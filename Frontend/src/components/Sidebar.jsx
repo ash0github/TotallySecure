@@ -23,7 +23,7 @@ const Sidebar = () => {
           <img src={homeIcon} alt="Dashboard" />
           <span>Dashboard</span>
         </li>
-        <li onClick={() => navigate('/new-transaction')}>
+        <li onClick={() => navigate('/transactions')}>
           <img src={addIcon} alt="New Transaction" />
           <span>New Transaction</span>
         </li>

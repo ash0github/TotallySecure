@@ -69,7 +69,7 @@ const UserDashboard = () => {
     <img src={bankCardsIcon} alt="Bank Cards" />
   </div>
   <div className="start-button-wrapper">
-    <button onClick={() => navigate('/new-transaction')}>Start</button>
+    <button onClick={() => navigate('/transactions')}>Start</button>
   </div>
 </div>
 </div>

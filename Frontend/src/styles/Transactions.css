@@ -1,0 +1,224 @@
+.transactions-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5fdf5;
+}
+
+.transactions-main {
+  display: flex;
+  margin: auto;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+.transactions-main h1 {
+  font-size: 2rem;
+  color: #1e3a2f;
+  margin-bottom: 2rem;
+}
+
+.transfer-box {
+  max-width: 600px;
+  margin: 0 auto;
+  border: 2px solid #004d00;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styling */
+.transfer-header {
+  background-color: #004d00;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 0.75rem;
+  text-align: center;
+  border-bottom: 2px solid #004d00;
+}
+
+/* Form layout */
+.transfer-form {
+  background: white;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.transfer-form input {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.75rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1e3a2f;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.cancel-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  background-color: #cc0000;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.continue-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  background-color: #004d00;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* currency selector */
+.currency-selector {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* Base button style */
+.currency-button,
+.currency-dropdown-button {
+  padding: 0.4rem 0.8rem;
+  background-color: white;
+  color: #004d00;
+  border: 2px solid #004d00;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background-color 0.2s ease;
+  outline: none;
+}
+
+/* Rounded edges */
+.currency-button:first-child {
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.currency-dropdown-button {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+/* Hover effect */
+.currency-button:hover,
+.currency-dropdown-button:hover {
+  background-color: lightgreen;
+}
+
+/* Persistent highlight when clicked */
+.currency-button:focus,
+.currency-dropdown-button:focus {
+  background-color: lightgreen;
+  font-weight: bold;
+}
+
+/* dropdown */
+.currency-selector-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.currency-selector {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Dropdown box styling */
+.currency-dropdown-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: white;
+  border: 2px solid #004d00;
+  border-top: none; /* visually connects to currency box */
+  border-radius: 0 0 10px 10px;
+  padding: 0.5rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: slideDown 1s ease-out;
+  margin-top: -2px; /* closes gap between buttons and dropdown */
+}
+
+/* Vertical layout */
+.currency-dropdown-list .currency-button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: white;
+  color: #004d00;
+  border: none;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.currency-dropdown-list .currency-button:hover {
+  background-color: #e6ffe6;
+  font-weight: bold;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  60% {
+    opacity: 0.5;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.currency-selector-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
