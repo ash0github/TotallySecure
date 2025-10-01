@@ -146,7 +146,7 @@
   background-color: lightgreen;
 }
 
-/* Persistent highlight when clicked */
+/* selected currency button */
 .currency-button:focus,
 .currency-dropdown-button:focus {
   background-color: lightgreen;
@@ -173,12 +173,12 @@
   width: 100%;
   background-color: white;
   border: 2px solid #004d00;
-  border-top: none; /* visually connects to currency box */
+  border-top: none; 
   border-radius: 0 0 10px 10px;
   padding: 0.5rem 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   animation: slideDown 1s ease-out;
-  margin-top: -2px; /* closes gap between buttons and dropdown */
+  margin-top: -2px; 
 }
 
 /* Vertical layout */
@@ -200,6 +200,7 @@
   font-weight: bold;
 }
 
+/* fade in annimation for drop down */
 @keyframes slideDown {
   0% {
     opacity: 0;
@@ -221,4 +222,74 @@
   align-items: center;
 }
 
+/* final transactions page */
+.confirmation-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.2rem;
+  margin-bottom: 0.3rem;
+  margin-top: 1rem;
+}
 
+.header-icon {
+  height: 90px;
+  flex-shrink: 0;
+}
+
+.confirmation-text h2 {
+  margin: 0;
+  color: #004d00;
+  line-height: 1.5;
+}
+
+.confirmation-text p {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+.confirmation-divider {
+  border: 1px;
+  border-top: 1px solid grey;
+}
+
+.confirmation-section {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.confirmation-visuals {
+  display: flex;
+  justify-content: right;
+  margin: 1rem 0;
+  margin-right: 1rem;
+}
+
+
+.transfer-arrows {
+  height: 20px;
+}
+
+.confirmation-section h3 {
+  margin-top: 0;
+  color: #004d00;
+  font-size: 1.1rem;
+}
+
+.transfer-block {
+  background-color: #E3EDE5;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.transfer-block h3 {
+  margin-top: 0;
+  color: #004d00;
+  font-size: 1.1rem;
+}

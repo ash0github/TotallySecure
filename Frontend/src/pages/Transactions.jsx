@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import '../styles/Transactions.css';
+import { useNavigate } from 'react-router-dom';
 
 const Transactions = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const toggleDropdown = () => setShowDropdown(prev => !prev);
+  const navigate = useNavigate();
+
+   const handleContinue = () => {
+    navigate('/confirm-transfer');
+  };
 
   return (
     <div className="transactions-wrapper">
@@ -60,7 +66,7 @@ const Transactions = () => {
 
           <div className="form-actions">
             <button className="cancel-button">Cancel</button>
-            <button className="continue-button">Continue</button>
+            <button className="continue-button" onClick={handleContinue}>Continue</button>
           </div>
         </form>
         </div>

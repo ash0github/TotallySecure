@@ -5,7 +5,7 @@ import homeIcon from '../assets/Home.svg';
 import addIcon from '../assets/Add.svg';
 import listIcon from '../assets/List.svg';
 import settingsIcon from '../assets/Settings.svg';
-import profileIcon from '../assets/Profile.svg'; // used for bottom section
+import profileIcon from '../assets/Profile.svg';
 import '../styles/Sidebar.css';
 
 const Sidebar = () => {
