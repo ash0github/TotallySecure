@@ -4,7 +4,7 @@ const StatsCards = ({ balance, recent, pending }) => (
   <div className="stats-cards">
     <div className="card">
       <h2>Current Balance</h2>
-      <p>R {balance.toFixed(2)}</p>
+      <p>R {balance !== undefined ? balance.toFixed(2) : "0.00"}</p>
     </div>
     <div className="card">
       <h2>Recent Payments</h2>

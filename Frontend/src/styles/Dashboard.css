@@ -4,6 +4,7 @@
   background-color: #f5fdf5;
 }
 
+/* Main content */
 .dashboard-main {
   flex: 1;
   padding: 2rem 3rem;
@@ -16,7 +17,7 @@
 .dashboard-header h1 {
   font-size: 2rem;
   color: #1e3a2f;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .dashboard-header p {
@@ -28,43 +29,31 @@
 .stats-cards {
   display: flex;
   gap: 1.5rem;
+  flex-wrap: wrap; /* allows wrapping on smaller screens */
 }
 
 .card {
   background: white;
-  border: 2px solid #1e3a2f; /* deep green border */
+  border: 1px solid #1e3a2f;
   border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  flex: 1;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  flex: 1 1 220px; /* grow/shrink with min width */
   display: flex;
   flex-direction: column;
   text-align: center;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-/* Green header with white text */
 .card h2 {
   background-color: #004d00;
   color: white;
   font-size: 1.1rem;
   padding: 0.75rem;
   margin: 0;
+  border-radius: 10px 10px 0 0;
   border-bottom: 1px solid #ccc;
 }
 
-.card:hover {
-  transform: scale(1.02);
-  transition: transform 0.2s ease;
-  background-color: lightgreen;
-}
-
-@media (max-width: 768px) {
-  .stats-cards {
-    flex-direction: column;
-  }
-}
-
-/* Value styling */
 .card p {
   font-size: 1.6rem;
   font-weight: bold;
@@ -73,39 +62,44 @@
   margin: 0;
 }
 
+.card:hover {
+  transform: translateY(-4px);
+  background-color: #e6f7e6;
+}
+
+/* Dashboard bottom row */
 .dashboard-bottom-row {
   display: flex;
   gap: 2rem;
-  align-items: flex-start;
+  align-items: stretch;
+  flex-wrap: wrap; /* make responsive */
 }
 
 /* Transaction Table */
 .transaction-table {
-  flex: 7;
+  flex: 2 1 500px;
   background: white;
-  border: 2px solid #004d00; /* deep green border */
+  border: 1px solid #004d00;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   overflow: hidden;
 }
 
-/* Green header bar */
 .transaction-table h2 {
   background-color: #004d00;
   color: white;
   font-size: 1.25rem;
   padding: 0.75rem 1rem;
   margin: 0;
-  border-bottom: 1px solid #ccc;
 }
 
-/* Table layout */
 .transaction-table table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.transaction-table th, .transaction-table td {
+.transaction-table th, 
+.transaction-table td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #eee;
   text-align: left;
@@ -122,7 +116,7 @@
 }
 
 .transaction-table tr:hover {
-  background-color: lightgreen;
+  background-color: #e6f7e6;
 }
 
 .transaction-table td:last-child {
@@ -132,42 +126,49 @@
 
 /* New Transaction Section */
 .new-transaction-section {
-  flex: 3;
+  flex: 1 1 280px;
   background: white;
-  border: 2px solid #004d00;
+  border: 1px solid #004d00;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  padding: 0;
-  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* Green header */
 .new-transaction-section h2 {
   background-color: #004d00;
   color: white;
   font-size: 1.25rem;
   padding: 0.75rem;
+  border-radius: 10px 10px 0 0;
   margin: 0;
-  border-bottom: 1px solid #ccc;
 }
 
-/* Subtext */
 .new-transaction-section p {
   font-size: 0.95rem;
   color: #666;
-  margin: 1rem 0 0.5rem;
+  margin: 1rem;
 }
 
-/* Centered button */
-.start-button-wrapper {
+.transaction-icon {
   display: flex;
   justify-content: center;
+  margin: 1rem 0;
+}
+
+.transaction-icon img {
+  width: 60px;
+  height: auto;
+}
+
+.start-button-wrapper {
   padding: 1rem;
 }
 
 .start-button-wrapper button {
-  padding: 0.5rem 1.2rem;
+  padding: 0.6rem 1.4rem;
   background-color: #004d00;
   color: white;
   border: none;
@@ -181,13 +182,23 @@
   background-color: #006600;
 }
 
-.transaction-icon {
-  display: flex;
-  justify-content: center;
-  margin: 1rem 0;
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .dashboard-main {
+    padding: 1.5rem;
+  }
 }
 
-.transaction-icon img {
-  width: 50px;
-  height: auto;
+@media (max-width: 768px) {
+  .dashboard-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .stats-cards {
+    flex-direction: column;
+  }
+
+  .dashboard-bottom-row {
+    flex-direction: column;
+  }
 }

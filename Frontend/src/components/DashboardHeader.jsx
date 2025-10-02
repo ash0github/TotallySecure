@@ -2,8 +2,7 @@ import React from 'react';
 
 const DashboardHeader = ({ username }) => (
   <div className="dashboard-header">
-    <h1>Welcome, {username} 👋</h1>
-    <p>to your Dashboard</p>
+    <h1>Welcome, {username} to your Dashboard 👋</h1>
   </div>
 );
 
