@@ -11,19 +11,19 @@
 
 .transactions-main.transaction-history {
   flex: 1;
+  min-height: 100vh;
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: stretch;   
-  justify-content: flex-start;
-  padding: 2rem;
-  overflow-y: auto;
+  padding: 1.5rem;
   box-sizing: border-box;
 }
 
 /* === Header section === */
 .history-header {
   width: 100%;          
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   text-align: left;
 }
 
@@ -42,37 +42,40 @@
 
 /* === Table container === */
 .history-table-container {
-  width: 100%;           
-  flex: 1;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
   overflow-x: auto;
-  margin-bottom: 2rem;
-  position: relative;
+  padding: 0;
+  box-sizing: border-box;
+  margin-top: 0;
 }
 
-
-.history-table-container::before {
-  content: "History";
-  display: block;
+/* History header above the table */
+.table-label {
   background-color: #006400;
   color: #fff;
   padding: 12px 20px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
   font-weight: 600;
   font-size: 1.1rem;
-  margin-bottom: -1px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  position: relative;
-  z-index: 1;
+  margin-bottom: 0;
 }
+
 
 /* === Table styling === */
 .history-table {
-  width: 100%;            
+  flex-grow: 1;
+  width: 100%; 
+  min-width: 100%;           
   border-collapse: collapse;
+  table-layout: auto;
 }
 
 .history-table th {

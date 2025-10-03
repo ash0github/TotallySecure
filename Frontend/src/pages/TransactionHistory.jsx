@@ -59,6 +59,7 @@ const TransactionHistory = () => {
 
         {/* Table */}
         <div className="history-table-container">
+          <div className="table-label">History</div>
           <table className="history-table">
             <thead>
               <tr>
