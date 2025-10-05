@@ -5,7 +5,7 @@ import homeIcon from '../assets/Home.svg';
 import addIcon from '../assets/Add.svg';
 import listIcon from '../assets/List.svg';
 import settingsIcon from '../assets/Settings.svg';
-import profileIcon from '../assets/Profile.svg'; // used for bottom section
+import profileIcon from '../assets/Profile.svg';
 import '../styles/Sidebar.css';
 
 const Sidebar = () => {
@@ -31,7 +31,7 @@ const Sidebar = () => {
           <img src={listIcon} alt="Transaction History" />
           <span>Transaction History</span>
         </li>
-        <li onClick={() => navigate('/settings')}>
+        <li onClick={() => navigate('/profile')}>
           <img src={settingsIcon} alt="Settings" />
           <span>Profile/Settings</span>
         </li>
