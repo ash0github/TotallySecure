@@ -7,7 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
     const navigate = useNavigate();
-
+    const [showAddFunds, setShowAddFunds] = useState(false);
+    const openAddFunds = () => setShowAddFunds(true);
+    const closeAddFunds = () => setShowAddFunds(false);
     const [showPassword, setShowPassword] = useState(false);
     const actualPassword = 'securePass123'; // Replace with actual password logic
 
@@ -88,10 +90,31 @@ const Profile = () => {
                 </div>
 
                 <div className="balance-actions">
-                    <button className="add-funds-button">Add Funds</button>
+                    <button className="add-funds-button" onClick={openAddFunds}>Add Funds</button>
                     <button className="transfer-button" onClick={() => navigate('/transactions')}>Make a Transfer</button>
                 </div>
             </div>
+
+            {/* Add Funds Modal */}
+             {showAddFunds && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h3>Add Funds</h3>
+                        </div>
+                        <label htmlFor="amount">Amount:</label>
+                        <input type="number" id="amount" className="modal-input" placeholder="Enter amount" />
+
+                        <label htmlFor="updated-balance">Your updated balance:</label>
+                        <input type="text" id="updated-balance" className="modal-input" disabled />
+
+                        <div className="modal-actions">
+                            <button className="cancel-button" onClick={closeAddFunds}>Cancel</button>
+                            <button className="complete-button">Complete</button>
+                        </div>
+                    </div>
+                </div>
+             )}
 
             {/* Security Card */}
             <div className="profile-card">
