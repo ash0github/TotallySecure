@@ -23,18 +23,18 @@ jobs:
           node-version: 20
 
       - name: Install frontend dependencies
-        working-directory: ./frontend
+        working-directory: ./Frontend
         run: npm ci
 
       - name: Build frontend
-        working-directory: ./frontend
+        working-directory: ./Frontend
         run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./frontend/dist
+          publish_dir: ./Frontend/dist
           publish_branch: gh-pages
           user_name: github-actions
           user_email: github-actions@github.com
