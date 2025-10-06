@@ -1,36 +1,41 @@
-name: CI
+name: CI 
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 permissions:
   contents: read
 
 jobs:
-  build-test:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+    
+      - name: Checkout repository
         uses: actions/checkout@v4
 
+     
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Install dependencies
-        run:  npm install
+      
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
 
-      - name: Build project
+      - name: Build frontend
+        working-directory: ./frontend
         run: npm run build
 
-      - name: Run tests (if present)
-        run: |
-          if npm run | grep -q " test"; then
-            npm run test
-          else
-            echo "No test script defined"
-          fi
+      
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+
+     
