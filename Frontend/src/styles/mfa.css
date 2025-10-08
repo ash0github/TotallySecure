@@ -1,0 +1,83 @@
+.mfa-wrapper {
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.mfa-header {
+  background-color: #004d00;
+  color: white;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+.mfa-header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.logo {
+  height: 32px;
+}
+
+.mfa-main {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.mfa-main h2 {
+  color: #004d00;
+  margin-bottom: 0.5rem;
+}
+
+.mfa-main p {
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.mfa-card {
+  background-color: #E3EDE5;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 500px;
+  margin: 0 auto;
+  margin-top: 3rem;
+}
+
+.mfa-input-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 5rem;
+  margin-bottom: 3rem;
+}
+
+.mfa-input {
+  width: 50px;
+  height: 50px;
+  font-size: 1.5rem;
+  text-align: center;
+  border: 2px solid #004d00;
+  border-radius: 8px;
+  background-color: white;
+  color: #004d00;
+}
+
+.mfa-submit {
+  background-color: #004d00;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.mfa-submit:hover {
+  background-color: #006600;
+}

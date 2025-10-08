@@ -6,6 +6,8 @@ import Transactions from './pages/Transactions';
 import FinalTransactions from './pages/FinalTransactions';
 import TransactionHistory from "./pages/TransactionHistory";
 
+import Profile from './pages/Profile';
+import MFA from './pages/mfa';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
       <Route path="/confirm-transfer" element={<FinalTransactions />} />
       <Route path="/history" element={<TransactionHistory />} />
 
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/mfa" element={<MFA />} />
     </Routes>
   );
 }

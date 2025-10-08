@@ -31,7 +31,7 @@ const Sidebar = () => {
           <img src={listIcon} alt="Transaction History" />
           <span>Transaction History</span>
         </li>
-        <li onClick={() => navigate('/settings')}>
+        <li onClick={() => navigate('/profile')}>
           <img src={settingsIcon} alt="Settings" />
           <span>Profile/Settings</span>
         </li>
