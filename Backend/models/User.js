@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
     username: {type: String, unique: false, required: true, trim: true},
     roles: {type: [String], default: ['user']},
     dateOfReg: {type: Date, default: Date.now},
+    firstName: {type: String, required: true, trim: true},
+    lastName: {type: String, required: true, trim: true},
+    accountNumber: {type: String, required: true},
+    idNumber: {type: String, required: true, trim: true},
 });
 
 module.exports = mongoose.model('User', userSchema);    
