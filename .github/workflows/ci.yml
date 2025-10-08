@@ -1,0 +1,43 @@
+name: CI 
+
+on:
+  push:
+    branches: [ main, workflows ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Generate dev SSL certs
+        run: |
+          chmod +x Backend/scripts/init-dev-certs.sh
+          cd Backend
+          ./scripts/init-dev-certs.sh
+          cd ../..
+      
+      - name: Install frontend dependencies
+        working-directory: ./Frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ./Frontend
+        run: npm run build
+
+      - name: Install backend dependencies
+        working-directory: ./Backend
+        run: npm ci

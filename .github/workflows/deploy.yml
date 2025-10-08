@@ -1,0 +1,48 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - workflows
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - name: Generate dev SSL certs
+        run: |
+          chmod +x Backend/scripts/init-dev-certs.sh
+          cd Backend
+          ./scripts/init-dev-certs.sh
+          cd ../..
+
+      - name: Install frontend dependencies
+        working-directory: ./Frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ./Frontend
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./Frontend/dist
+          publish_branch: gh-pages
+          user_name: github-actions
+          user_email: github-actions@github.com
