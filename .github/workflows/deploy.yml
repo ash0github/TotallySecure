@@ -28,6 +28,7 @@ jobs:
           chmod +x Backend/scripts/init-dev-certs.sh
           cd Backend
           ./scripts/init-dev-certs.sh
+          cd ../..
 
       - name: Install frontend dependencies
         working-directory: ./Frontend
