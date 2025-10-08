@@ -22,6 +22,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          
+      - name: Generate dev SSL certs
+        run: |
+          chmod +x Backend/scripts/init-dev-certs.sh
+          ./Backend/scripts/init-dev-certs.sh
 
       - name: Generate dev SSL certs
         run: |
