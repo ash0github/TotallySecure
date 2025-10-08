@@ -1,0 +1,216 @@
+/* Wrapper & Main */
+.transactions-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f0faf0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.transactions-main {
+  display: flex;
+  margin: auto;
+  max-width: 600px;
+  padding: 2rem;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Transfer Box */
+.transfer-box {
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #c4e0c4;
+}
+
+/* Header styling */
+.transfer-header {
+  background-color: #01672B;
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #004d00;
+  border-radius: 12px 12px 0 0;
+}
+
+/* Form layout */
+.transfer-form {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border: 1px solid #1e3a2f;
+  border-radius: 0px 0px 10px 10px;
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #004d00;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #D3D4D5;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #006600;
+  box-shadow: 0 0 6px rgba(0, 102, 0, 0.2);
+  outline: none;
+}
+
+/* Form Row */
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1 1 48%;
+}
+
+/* Buttons */
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cancel-button,
+.continue-button {
+  flex: 1; 
+  padding: 0.75rem 0; /* vertical padding */
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* Specific colors */
+.cancel-button {
+  background-color: #e57373;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #d32f2f;
+}
+
+.continue-button {
+  background-color: #006600;
+  color: white;
+}
+
+.continue-button:hover {
+  background-color: #004d00;
+}
+
+/* Currency Selector */
+.currency-selector-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.currency-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.currency-button,
+.currency-dropdown-button {
+  padding: 0.5rem 1rem;
+  background-color: #f0fff0;
+  color: #006600;
+  border: 1.5px solid #006600;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.currency-button:hover,
+.currency-dropdown-button:hover,
+.currency-button:focus,
+.currency-dropdown-button:focus {
+  background-color: #c8f0c8;
+  font-weight: 600;
+}
+
+/* Dropdown box styling */ 
+.currency-dropdown-list { 
+  display: flex; 
+  flex-direction: 
+  column; width: 100%; 
+  background-color: white; 
+  border: 2px solid #004d00; 
+  border-top: none; 
+  border-radius: 0 0 10px 10px; 
+  padding: 0.5rem 0; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+  animation: slideDown 1s ease-out; 
+  margin-top: -2px; } 
+  
+  /* Vertical layout */ 
+  .currency-dropdown-list 
+  .currency-button { 
+    display: block; 
+    width: 100%; 
+    padding: 0.5rem 1rem; 
+    background-color: white; 
+    color: #004d00; 
+    border: none; 
+    text-align: left; 
+    font-size: 1rem; 
+    cursor: pointer; 
+    transition: background-color 0.2s ease; } 
+    
+    .currency-dropdown-list 
+    .currency-button:hover { 
+      background-color: #e6ffe6; 
+      font-weight: bold; } 
+      
+    /* fade in annimation for drop down */ 
+    @keyframes slideDown { 
+      0% { 
+        opacity: 0; 
+        transform: translateY(-10px); } 
+      60% { 
+        opacity: 0.5; 
+        transform: translateY(2px); } 
+      100% { 
+        opacity: 1; 
+        transform: translateY(0); } }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .currency-selector {
+    justify-content: center;
+  }
+}
