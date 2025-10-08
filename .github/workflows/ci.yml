@@ -28,6 +28,7 @@ jobs:
           chmod +x Backend/scripts/init-dev-certs.sh
           cd Backend
           ./scripts/init-dev-certs.sh
+          cd ../..
       
       - name: Install frontend dependencies
         working-directory: ./Frontend
@@ -38,5 +39,5 @@ jobs:
         run: npm run build
 
       - name: Install backend dependencies
-        working-directory: ./backend
+        working-directory: ./Backend
         run: npm ci
