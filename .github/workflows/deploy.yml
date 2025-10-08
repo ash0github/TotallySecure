@@ -14,15 +14,16 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      
+
       - name: Generate dev SSL certs
         run: |
           chmod +x Backend/scripts/init-dev-certs.sh
@@ -38,7 +39,13 @@ jobs:
         working-directory: ./Frontend
         run: npm run build
 
+     
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -46,3 +53,10 @@ jobs:
           publish_branch: gh-pages
           user_name: github-actions
           user_email: github-actions@github.com
+
+      
+      - name: Display deployed site URL
+        run: |
+          echo "✅ Deployment complete!"
+          echo "🌐 Your site should be live at:"
+          echo "➡️  https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
