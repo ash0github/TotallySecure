@@ -30,9 +30,10 @@ const handleLogin = async (e) => {
     const data = await res.json();
     if (res.ok) {
       console.log("✅ Login successful:", data);
-      localStorage.setItem("token", data.token); // Save JWT
-      // Redirect to dashboard or protected route
-      navigate("/userdashboard");
+      // Store email for MFA verification
+      localStorage.setItem("email", username);
+      // Redirect to MFA page
+      navigate("/mfa");
     } else {
       alert(data.message || "Login failed");
     }
