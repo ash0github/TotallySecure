@@ -25,7 +25,8 @@ jobs:
       - name: Generate dev SSL certs
         run: |
           chmod +x Backend/scripts/init-dev-certs.sh
-          ./Backend/scripts/init-dev-certs.sh
+          cd Backend
+          ./scripts/init-dev-certs.sh
 
       - name: Install frontend dependencies
         working-directory: ./Frontend
