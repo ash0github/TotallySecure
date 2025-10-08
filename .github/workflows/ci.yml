@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, workflows ]
   pull_request:
     branches: [ main ]
 
@@ -18,12 +18,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-     
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      - name: Generate dev SSL certs
+        run: |
+          chmod +x Backend/scripts/init-dev-certs.sh
+          cd Backend
+          ./scripts/init-dev-certs.sh
       
       - name: Install frontend dependencies
         working-directory: ./Frontend
@@ -33,9 +37,6 @@ jobs:
         working-directory: ./Frontend
         run: npm run build
 
-      
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm ci
-
-     
