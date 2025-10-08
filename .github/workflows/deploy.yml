@@ -4,9 +4,10 @@ on:
   push:
     branches:
       - main
+      - workflows
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -25,7 +26,9 @@ jobs:
       - name: Generate dev SSL certs
         run: |
           chmod +x Backend/scripts/init-dev-certs.sh
-          ./Backend/scripts/init-dev-certs.sh
+          cd Backend
+          ./scripts/init-dev-certs.sh
+          cd ../..
 
       - name: Install frontend dependencies
         working-directory: ./Frontend
