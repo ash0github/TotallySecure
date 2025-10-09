@@ -1,58 +1,58 @@
 const ip = require('ip');
-const AllowIp = require('../models/AllowIp.js');
 
-const REFRESH_MS = Number(process.env.ALLOWLIST_REFRESH_MS || 15000);
-const DEBUG = !!process.env.ALLOWLIST_DEBUG;
-
-function normalize(a = '') {
-  a = a.replace(/^::ffff:/, '');
-  return a === '::1' ? '127.0.0.1' : a;
+// Normalize IPv6-mapped IPv4 and loopback
+function normalize(addr = '') {
+  addr = addr.replace(/^::ffff:/, '');
+  return addr === '::1' ? '127.0.0.1' : addr;
 }
+
+function parseAllowlist(str = '') {
+  const raw = (str || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  const singles = [];
+  const cidrs = [];
+  for (const e of raw) (e.includes('/') ? cidrs : singles).push(e);
+  return { singles, cidrs, raw };
+}
+
 function getClientIp(req) {
+  // works when app.set('trust proxy', 1) is enabled
   if (req.ip) return normalize(req.ip);
   const fwd = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
   return normalize(fwd || req.socket?.remoteAddress || '');
 }
 
-let cache = { singles: new Set(), cidrs: [], raw: [] };
-
-async function reload() {
-  const rows = await AllowIp.find({ enabled: true }).lean();
-  const singles = new Set();
-  const cidrs = [];
-  const raw = [];
-
-  for (const r of rows) {
-    raw.push(r.value);
-    if (r.value.includes('/')) cidrs.push(r.value);
-    else singles.add(r.value);
-  }
-  cache = { singles, cidrs, raw };
-  if (DEBUG) console.log('[allowlist-db] loaded:', raw.join(', ') || '(empty)');
-}
-
-function isAllowed(addr) {
+function isAllowed(addr, allow) {
   if (!addr) return false;
   const a = normalize(addr);
-  if (cache.singles.has(a)) return true;
-  for (const c of cache.cidrs) {
-    try { if (ip.cidrSubnet(c).contains(a)) return true; } catch {}
+  if (allow.singles.includes(a)) return true;
+  for (const block of allow.cidrs) {
+    try { if (ip.cidrSubnet(block).contains(a)) return true; } catch {}
   }
   return false;
 }
 
-function ipAllowlistDb() {
-  // start/keep cache fresh
-  reload().catch(() => {});
-  setInterval(reload, REFRESH_MS).unref();
+function ipAllowlist() {
+  let allow = parseAllowlist(process.env.ALLOWED_IPS || '');
+  const debug = !!process.env.ALLOWLIST_DEBUG;
 
   return (req, res, next) => {
+    // hot-reload if env changed (handy on re-deploys)
+    if ((process.env.ALLOWED_IPS || '') !== allow.raw) {
+      allow = parseAllowlist(process.env.ALLOWED_IPS || '');
+      if (debug) console.log(`[allowlist] reloaded: ${allow.raw || '(empty)'}`);
+    }
+
     const clientIp = getClientIp(req);
-    const ok = isAllowed(clientIp);
-    if (DEBUG) console.log(`[allowlist-db] ${ok ? 'ALLOW' : 'DENY '} ${clientIp}`);
+    const ok = isAllowed(clientIp, allow);
+    if (debug) console.log(`[allowlist] ${ok ? 'ALLOW' : 'DENY '} ${clientIp}  ALLOWED_IPS=${allow.raw || '(empty)'}`);
+
     if (!ok) return res.status(403).send('Forbidden (IP not allowlisted)');
     next();
   };
 }
 
-module.exports = { ipAllowlistDb, reload };
+module.exports = { ipAllowlist };
