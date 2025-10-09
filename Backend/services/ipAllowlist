@@ -1,68 +1,91 @@
-// Backend/src/services/ipAllowlist.js
+// Backend/services/ipAllowlist.js
 const ip = require('ip');
 
-// Build allowlist once from env (supports single IPs and CIDR ranges)
-function buildAllowlist() {
-  const raw = (process.env.ALLOWED_IPS || '')
+/** --- Helpers ---- */
+
+// Normalize IPv6-mapped IPv4 and loopback
+function normalize(addr = '') {
+  if (!addr) return '';
+  // "::ffff:127.0.0.1" -> "127.0.0.1"
+  addr = addr.replace(/^::ffff:/, '');
+  // "::1" -> "127.0.0.1" (treat IPv6 loopback as IPv4 loopback for simplicity)
+  if (addr === '::1') return '127.0.0.1';
+  return addr;
+}
+
+// Build allowlist object from a string (e.g., "1.2.3.4/32,5.6.7.8")
+function parseAllowlist(str = '') {
+  const raw = (str || '')
     .split(',')
     .map(s => s.trim())
     .filter(Boolean);
 
   const singles = [];
   const cidrs = [];
-  for (const e of raw) (e.includes('/') ? cidrs : singles).push(e);
-  return { singles, cidrs };
+
+  for (const e of raw) {
+    if (e.includes('/')) cidrs.push(e);
+    else singles.push(e);
+  }
+  return { singles, cidrs, raw: str };
 }
 
-// Normalize "::ffff:127.0.0.1" → "127.0.0.1"
-function normalize(addr = '') {
-  return addr.replace(/^::ffff:/, '');
+// Return the best guess for client IP (prefers req.ip if trust proxy is set)
+function getClientIp(req) {
+  if (req.ip) return normalize(req.ip);
+  const fwd = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  return normalize(fwd || (req.socket && req.socket.remoteAddress) || '');
 }
 
-// Core check
+// Check membership
 function isAllowed(addr, allow) {
   if (!addr) return false;
+  // "*" means allow everything (useful for local debugging)
+  if (allow.raw === '*') return true;
+
   const a = normalize(addr);
   if (allow.singles.includes(a)) return true;
+
   for (const block of allow.cidrs) {
     try {
       if (ip.cidrSubnet(block).contains(a)) return true;
     } catch {
-      // ignore malformed CIDR entries
+      // ignore malformed CIDRs
     }
   }
   return false;
 }
 
-// Resolve client IP safely (prefers req.ip if trust proxy is set)
-function getClientIp(req) {
-  // If app.set('trust proxy', 1) is enabled (Render), req.ip is the real client IP
-  if (req.ip) return normalize(req.ip);
-
-  // Fallbacks
-  const fwd = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
-  return normalize(fwd || req.socket?.remoteAddress || '');
-}
+/** --- Middleware --- */
 
 function ipAllowlist() {
-  const allow = buildAllowlist(); // read once at startup
+  let allow = parseAllowlist(process.env.ALLOWED_IPS || '');
   const debug = !!process.env.ALLOWLIST_DEBUG;
 
   return (req, res, next) => {
-    const clientIp = getClientIp(req);
-
-    if (!isAllowed(clientIp, allow)) {
-      if (debug) {
-        console.warn(`[allowlist] DENY ${clientIp}  ALLOWED_IPS=${process.env.ALLOWED_IPS || '(empty)'}`);
-      }
-      return res.status(403).send('Forbidden (IP not allowlisted)');
+    // Hot-reload if env changed (cheap string compare)
+    if ((process.env.ALLOWED_IPS || '') !== allow.raw) {
+      allow = parseAllowlist(process.env.ALLOWED_IPS || '');
+      if (debug) console.log(`[allowlist] reloaded: ${allow.raw || '(empty)'}`);
     }
 
+    const clientIp = getClientIp(req);
+    const ok = isAllowed(clientIp, allow);
+
     if (debug) {
-      console.log(`[allowlist] ALLOW ${clientIp}`);
+      console.log(`[allowlist] ${ok ? 'ALLOW' : 'DENY '} ${clientIp}  ALLOWED_IPS=${allow.raw || '(empty)'}`);
+    }
+
+    if (!ok) {
+      return res.status(403).send('Forbidden (IP not allowlisted)');
     }
     next();
   };
 }
 
-module.exports = { ipAllowlist, isAllowed };
+module.exports = {
+  ipAllowlist,
+  isAllowed,       // exported for tests/diagnostics
+  getClientIp,     // exported for tests/diagnostics
+  parseAllowlist,  // exported for tests/diagnostics
+};
