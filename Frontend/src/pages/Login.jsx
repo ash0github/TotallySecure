@@ -12,34 +12,44 @@ const Login = () => {
   const [accountNumber, setAccountNumber] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  // ✅ Allowlist regex: account number must be 6–18 digits
+  const ACCOUNT_RE = /^\d{6,18}$/;
 
   // Connects to Backend server  Auth Routes
-const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await fetch("https://localhost:4040/totallysecure/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: username, // or use a separate email field
-        password: password
-      }),
-    });
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-    const data = await res.json();
-    if (res.ok) {
-      console.log("✅ Login successful:", data);
-      localStorage.setItem("token", data.token); // Save JWT
-      // Redirect to dashboard or protected route
-      navigate("/userdashboard");
-    } else {
-      alert(data.message || "Login failed");
+    // ✅ Client-side allowlist validation
+    if (!ACCOUNT_RE.test(accountNumber.trim())) {
+      alert('Account number must be 6–18 digits.');
+      return;
     }
-  } catch (err) {
-    console.error("Error logging in:", err);
-  }
-};
+
+    try {
+      const res = await fetch("https://localhost:4040/totallysecure/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: username, // or use a separate email field
+          password: password
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        console.log("✅ Login successful:", data);
+        localStorage.setItem("token", data.token); // Save JWT
+        // Redirect to dashboard or protected route
+        navigate("/userdashboard");
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (err) {
+      console.error("Error logging in:", err);
+    }
+  };
 
   return (
     <div className="login-page">
@@ -54,22 +64,22 @@ const handleLogin = async (e) => {
         {/* Left Panel */}
         <div className="left-panel">
           <h2>Login to Totally $ecure</h2>
-            <p>Enter your login information to proceed.</p>
+          <p>Enter your login information to proceed.</p>
 
-        {/* Falling money overlay */}
-        <div className="falling-money">
+          {/* Falling money overlay */}
+          <div className="falling-money">
             {[...Array(40)].map((_, i) => (
-            <div
+              <div
                 key={i}
                 className="money"
                 style={{
-                left: `${Math.random() * 100}%`,
-                '--delay': `${Math.random() * 5}s`,
-                '--fall-duration': `${6 + Math.random() * 5}s`,
-                '--sway-spin-duration': `${3 + Math.random() * 3}s`,
-                '--size': `${40 + Math.random() * 40}px`
+                  left: `${Math.random() * 100}%`,
+                  '--delay': `${Math.random() * 5}s`,
+                  '--fall-duration': `${6 + Math.random() * 5}s`,
+                  '--sway-spin-duration': `${3 + Math.random() * 3}s`,
+                  '--size': `${40 + Math.random() * 40}px`
                 }}
-            >
+              >
                 <img src={loginMoney} alt="" />
               </div>
             ))}

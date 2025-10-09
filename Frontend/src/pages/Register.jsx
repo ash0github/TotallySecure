@@ -22,33 +22,48 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+  // ✅ Allowlist regexes
+  const ID_RE = /^\d{13}$/;        // SA ID: exactly 13 digits
+  const ACCOUNT_RE = /^\d{6,18}$/; // Account: 6–18 digits
+
   // Connects to Backend server  Auth Routes
   const handleRegister = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await fetch("https://localhost:4040/totallysecure/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: formData.email,
-        username: `${formData.firstName} ${formData.surname}`,
-        password: formData.password
-      }),
-    });
+    e.preventDefault();
 
-    const data = await res.json();
-    if (res.ok) {
-      alert("✅ Registration successful!");
-      console.log(data);
-      // Redirect to login
-      navigate("/login");
-    } else {
-      alert(data.message || "Registration failed");
+    // ✅ Client-side allowlist checks (no payload changes)
+    if (!ID_RE.test(formData.idNumber.trim())) {
+      alert("ID number must be exactly 13 digits.");
+      return;
     }
-  } catch (err) {
-    console.error("Error registering:", err);
-  }
-};
+    if (!ACCOUNT_RE.test(formData.accountNumber.trim())) {
+      alert("Account number must be 6–18 digits.");
+      return;
+    }
+
+    try {
+      const res = await fetch("https://localhost:4040/totallysecure/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          username: `${formData.firstName} ${formData.surname}`,
+          password: formData.password
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("✅ Registration successful!");
+        console.log(data);
+        // Redirect to login
+        navigate("/login");
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (err) {
+      console.error("Error registering:", err);
+    }
+  };
 
   return (
     <div className="login-page">
