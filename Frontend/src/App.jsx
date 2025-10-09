@@ -5,29 +5,30 @@ import UserDashboard from './pages/UserDashboard';
 import Transactions from './pages/Transactions';
 import FinalTransactions from './pages/FinalTransactions';
 import TransactionHistory from "./pages/TransactionHistory";
-
+import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
 import MFA from './pages/mfa';
 import Notifications from './pages/Notifications';
 
 function App() {
   return (
-    <Routes>
+    <Routes>  
+      {/* Public Routes */}
       <Route path="/" element={<Login />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/userdashboard" element={<UserDashboard />} />
-      <Route path="/transactions" element={<Transactions />} />
-      <Route path="/confirm-transfer" element={<FinalTransactions />} />
-      <Route path="/history" element={<TransactionHistory />} />
-      <Route path="/notifications" element={<Notifications />} />
-
-      <Route path="/profile" element={<Profile />} />
       <Route path="/mfa" element={<MFA />} />
+
+      {/* Protected Routes */}
+      <Route path="/userdashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
+      <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
+      <Route path="/confirm-transfer" element={<ProtectedRoute><FinalTransactions /></ProtectedRoute>} />
+      <Route path="/history" element={<ProtectedRoute><TransactionHistory /></ProtectedRoute>} />
+      <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
       {/* catch for unknown routes */}
       <Route path="*" element={<Navigate to="/" replace />} />
-
     </Routes>
   );
 }
