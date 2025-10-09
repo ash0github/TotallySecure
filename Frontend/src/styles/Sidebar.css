@@ -59,11 +59,35 @@
   font-size: 1rem;
   opacity: 0.9;
   cursor: pointer;
+
+}
+
+.sidebar-bottom {
+  margin-top: auto; /* push to bottom */
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.sidebar-user img {
-  width: 18px;
-  height: 18px;
+.sidebar-user-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Logout left, bell right */
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.sidebar-user img,
+.sidebar-notifications img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.sidebar-notifications img{
+   transform: translateY(4px);
 }

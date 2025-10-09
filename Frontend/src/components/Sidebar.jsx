@@ -6,6 +6,7 @@ import addIcon from '../assets/Add.svg';
 import listIcon from '../assets/List.svg';
 import settingsIcon from '../assets/Settings.svg';
 import profileIcon from '../assets/Profile.svg';
+import bellIcon from '../assets/bellIcon.png';
 import '../styles/Sidebar.css';
 
 const Sidebar = () => {
@@ -37,9 +38,17 @@ const Sidebar = () => {
         </li>
       </ul>
 
-      <div className="sidebar-user" onClick={() => navigate('/login')}>
-        <img src={profileIcon} alt="User Icon" />
-        <span>Logout</span>
+      <div className="sidebar-bottom">
+        <div className="sidebar-user-actions">
+          <div className="sidebar-user" onClick={() => navigate('/login')}>
+            <img src={profileIcon} alt="User Icon" />
+            <span>Logout</span>
+          </div>
+
+          <div className="sidebar-notifications" onClick={() => navigate("/notifications")}>
+            <img src={bellIcon} alt="Notifications" />
+          </div>
+        </div>
       </div>
     </aside>
   );

@@ -8,6 +8,7 @@ import TransactionHistory from "./pages/TransactionHistory";
 
 import Profile from './pages/Profile';
 import MFA from './pages/mfa';
+import Notifications from './pages/Notifications';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Route path="/transactions" element={<Transactions />} />
       <Route path="/confirm-transfer" element={<FinalTransactions />} />
       <Route path="/history" element={<TransactionHistory />} />
+      <Route path="/notifications" element={<Notifications />} />
 
       <Route path="/profile" element={<Profile />} />
       <Route path="/mfa" element={<MFA />} />
