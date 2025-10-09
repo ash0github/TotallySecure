@@ -1,13 +1,19 @@
 .profile-wrapper {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
 }
 
 .profile-main {
-  position: relative;
-  padding: 2rem;
-  background-color: #f9f9f9;
-  overflow: hidden;
+  flex: 1;                    
+  padding: 1rem 2rem;        
+  margin: 0 auto;             
+  max-width: 1200px;          
+  overflow-y: auto;           
+  background-color: #f8f9fa;
+  width: 100%;  
 }
 
 .profile-background {
@@ -23,9 +29,9 @@
 }
 
 .profile-header {
-  font-size: 2rem;
-  color: #004d00;
-  margin-bottom: 1rem;
+  color: #01672B;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .profile-header + p  {
@@ -35,7 +41,6 @@
 }
 
 /* Grid layout for profile sections */
-
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -44,7 +49,7 @@
 
 .profile-card {
   background-color: #ffffff;
-  border: 2px solid #004d00;
+  border: 1px solid #004d00;
   border-radius: 10px;
   padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -86,19 +91,21 @@
 /* Currency */
 .currency-selector-wrapper {
   margin-top: 1rem;
+  display: flex;
+  flex-direction: row;     
+  align-items: center;     
+  gap: 12rem;                
 }
 
 .currency-label {
-  display: block;
-  margin-bottom: 0.5rem;
   font-weight: bold;
   color: #333;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .currency-dropdown {
   padding: 0.5rem 0.75rem;
-  border: 1px solid #004d00; 
+  border: 1px solid #AFD7BB; 
   border-radius: 6px;
   background-color: #fff;
   font-size: 0.95rem;
@@ -108,9 +115,14 @@
   cursor: pointer;
 }
 
+.currency-dropdown option[selected] {
+  font-weight: bold;
+  background-color: #e6ffe6;
+}
+
 /* Current Balance */
 .balance-amount-box {
-  border: 1px solid #004d00;
+  border: 1px solid #AFD7BB;
   background-color: #f5fff5;
   padding: 1rem;
   font-size: 1.2rem;
@@ -118,45 +130,50 @@
   color: #004d00;
   border-radius: 8px;
   margin: 1rem 0 1.5rem 0;
-  width: calc(100% - 2rem); 
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
   text-align: left;
+  box-sizing: border-box; 
 }
 
 .balance-actions {
   display: flex;
-  justify-content: space-between;
+  gap: 1rem; 
   margin-top: 1rem;
 }
 
-.add-funds-button {
-  padding: 0.5rem 1rem;
-  background-color: #004d00;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
+.add-funds-button,
 .transfer-button {
-  padding: 0.5rem 1rem;
-  background-color: #004d00;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  flex: 1;                     
+  padding: 0.5rem 0;          
   font-size: 0.9rem;
-  margin-left: auto;
+  border-radius: 8px;
+  border: 1px solid transparent; 
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.add-funds-button:hover{
+/* Add Funds */
+.add-funds-button {
+  background-color: #004d00;
+  color: #fff;
+}
+
+/* Transfer */
+.transfer-button {
+  background-color: #fff;
+  color: #004d00;
+  border-color: #004d00;
+}
+
+/* Hover effects */
+.add-funds-button:hover {
   background-color: #006600;
 }
 
-.transfer-button:hover{
-  background-color: #006600;
+.transfer-button:hover {
+  background-color: #004d00;
+  color: #fff;
+  border-color: #006600;
 }
 
 /* Security */
@@ -165,6 +182,14 @@
   align-items: center;
   gap: 1rem;
   margin: 1rem 0 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.security-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .password-label {
@@ -177,7 +202,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #004d00;
+  border: 1px solid #AFD7BB;
   background-color: #f5fff5;
   padding: 0.75rem 1rem;
   border-radius: 8px;
@@ -198,32 +223,55 @@
   opacity: 0.7;
 }
 
-.security-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
 .change-password-button,
 .sign-out-button {
-  padding: 0.5rem 1rem;
-  background-color: #004d00;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  flex: 1;                     
+  padding: 0.5rem 0;          
   font-size: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid transparent; 
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.change-password-button:hover,
-.sign-out-button:hover {
+.change-password-button {
+  background-color: #004d00;
+  color:white;
+}
+
+.change-password-button:hover {
   background-color: #006600;
+  color:white;
+}
+
+/* Sign Out*/
+.sign-out-button {
+  background-color: #FFCDCD;   
+  color: #C65A5A;              
+  border-color: #C65A5A;      
+}
+
+.sign-out-button:hover {
+  background-color: #AE5050;   
+  color: #fff;                
+  border-color: #AE5050;     
 }
 
 /* grid */
 @media (max-width: 768px) {
   .profile-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .password-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .security-actions {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
 

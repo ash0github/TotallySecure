@@ -35,7 +35,7 @@ const Profile = ({ user }) => {
   return (
     <div className="profile-wrapper">
       <Sidebar />
-      <main className="profile-main">
+      <div className="profile-main">
         
         {/* background image */}
          <img
@@ -171,7 +171,7 @@ const Profile = ({ user }) => {
                 </div>
             </div>
           </div>
-      </main>
+      </div>
     </div>
   );
 };
