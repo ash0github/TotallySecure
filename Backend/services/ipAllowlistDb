@@ -8,6 +8,7 @@ function normalize(a = '') {
   a = a.replace(/^::ffff:/, '');
   return a === '::1' ? '127.0.0.1' : a;
 }
+
 function getClientIp(req) {
   if (req.ip) return normalize(req.ip);
   const fwd = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
@@ -27,6 +28,7 @@ async function reload() {
     if (r.value.includes('/')) cidrs.push(r.value);
     else singles.add(r.value);
   }
+
   cache = { singles, cidrs, raw };
   if (DEBUG) console.log('[allowlist-db] loaded:', raw.join(', ') || '(empty)');
 }
@@ -42,7 +44,7 @@ function isAllowed(addr) {
 }
 
 function ipAllowlistDb() {
-  // start/keep cache fresh
+  // initial load + periodic refresh
   reload().catch(() => {});
   setInterval(reload, REFRESH_MS).unref();
 
