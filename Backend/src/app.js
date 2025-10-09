@@ -1,47 +1,33 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-require('dotenv').config();
-
-const { ipAllowlistDb } = require('../services/ipAllowlistDb');
+﻿const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+require("dotenv").config();
 
 const app = express();
-
-// trust Render's proxy so req.ip is correct
-app.set('trust proxy', 1);
-
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(helmet());
 
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || 'https://localhost:4114';
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "https://localhost:4114";
 app.use(cors({ origin: FRONTEND_ORIGIN, credentials: true }));
 
-// Public health
-app.get('/', (_req, res) => {
-  res.send('TotallySecure backend is running. Try /totallysecure/ping');
-});
+// Public routes
+app.get("/", (_req, res) => res.send("TotallySecure backend is running. Try /totallysecure/ping"));
+app.get("/totallysecure/ping", (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
-app.get('/totallysecure/ping', (_req, res) => {
-  res.json({ ok: true, time: new Date().toISOString() });
-});
+// 1) Admin allowlist API (TOKEN PROTECTED) — mounted BEFORE the IP gate
+const adminAllowlistRoutes = require("../routes/adminAllowlistRoutes");
+app.use("/totallysecure/admin/allowlist", adminAllowlistRoutes);
 
-// --- Admin allowlist management API (token protected) ---
-// Mounted BEFORE the IP allowlist so you can manage entries from anywhere with the token.
-const adminAllowlistRoutes = require('../routes/adminAllowlistRoutes');
-app.use('/totallysecure/admin/allowlist', adminAllowlistRoutes);
+// 2) IP gate for the rest of /totallysecure
+const { ipAllowlistDb } = require("../services/ipAllowlistDb");
+app.use("/totallysecure", ipAllowlistDb());
 
-const { ipAllowlistDb } = require('../services/ipAllowlistDb');
-app.use('/totallysecure', ipAllowlistDb());
+// 3) Your other /totallysecure routes
+const authRoutes = require("../routes/authRoutes");
+app.use("/totallysecure/auth", authRoutes);
 
-// Your existing user routes
-const authRoutes = require('../routes/authRoutes');
-app.use('/totallysecure/auth', authRoutes);
-
-// --- IP gate for the rest of /totallysecure (excludes /ping and admin routes above) ---
-app.use('/totallysecure', ipAllowlistDb());
-// 404 fallback
-app.use((req, res) => {
-  res.status(404).json({ error: 'Not found', path: req.originalUrl });
-});
+// 404
+app.use((req, res) => res.status(404).json({ error: "Not found", path: req.originalUrl }));
 
 module.exports = app;
