@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import '../styles/Login.css';
 import loginMoney from '../assets/login_money.svg';
 import eyeIcon from '../assets/password_eye.svg';
@@ -43,6 +43,28 @@ const handleLogin = async (e) => {
     console.error("Error logging in:", err);
   }
 };
+
+  // Prevent multiple rapid clicks on login button
+  const [disabled, setDisabled] = useState(false);
+  const lastClickRef = useRef(0);
+
+  const handleSubmit = (e) => {
+    const now = Date.now();
+    if (now - lastClickRef.current < 4400) {
+      console.log("⏳ Ignored rapid click");
+      e.preventDefault();
+      return;
+    }
+
+    lastClickRef.current = now;
+    setDisabled(true);
+
+    setTimeout(() => {
+      setDisabled(false);
+    }, 4400);
+
+    handleLogin(e);
+  };
 
   return (
     <div className="login-page">
@@ -98,7 +120,7 @@ const handleLogin = async (e) => {
             </button>
           </div>
 
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSubmit}>
             <div className="input-group">
               <label htmlFor="username">Email</label>
               <input
@@ -143,8 +165,8 @@ const handleLogin = async (e) => {
               </div>
             </div>
 
-            <button type="submit" className="login-btn">
-              Login
+            <button type="submit" className="login-btn" disabled={disabled}>
+              {disabled ? "Please wait..." : "Login"}
             </button>
           </form>
 

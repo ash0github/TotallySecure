@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import '../styles/Login.css'; 
 import loginMoney from '../assets/login_money.svg';
 import logo from '../assets/Logo.svg';
@@ -55,6 +55,28 @@ const Register = () => {
   }
 };
 
+// Prevent multiple rapid clicks on Register button
+  const [disabled, setDisabled] = useState(false);
+  const lastClickRef = useRef(0);
+
+  const handleSubmit = (e) => {
+    const now = Date.now();
+    if (now - lastClickRef.current < 4400) {
+      console.log("⏳ Ignored rapid click");
+      e.preventDefault();
+      return;
+    }
+
+    lastClickRef.current = now;
+    setDisabled(true);
+
+    setTimeout(() => {
+      setDisabled(false);
+    }, 4400);
+
+    handleRegister(e);
+  };
+
   return (
     <div className="login-page">
       <header className="login-header">
@@ -89,34 +111,34 @@ const Register = () => {
 
         {/* Right Panel */}
         <div className="right-panel">
-          <form onSubmit={handleRegister}>
-             <div className="input-row">
-            <div className="input-group">
-              <label htmlFor="firstName">First Name</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                placeholder="Enter first name"
-                value={formData.firstName}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <form onSubmit={handleSubmit}>
+              <div className="input-row">
+              <div className="input-group">
+                <label htmlFor="firstName">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  placeholder="Enter first name"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-            <div className="input-group">
-              <label htmlFor="surname">Surname</label>
-              <input
-                type="text"
-                id="surname"
-                name="surname"
-                placeholder="Enter surname"
-                value={formData.surname}
-                onChange={handleChange}
-                required
-              />
+              <div className="input-group">
+                <label htmlFor="surname">Surname</label>
+                <input
+                  type="text"
+                  id="surname"
+                  name="surname"
+                  placeholder="Enter surname"
+                  value={formData.surname}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
-          </div>
             
             <div className="input-group">
                 <label htmlFor="email">Email</label>
@@ -183,8 +205,8 @@ const Register = () => {
               />
             </div>
 
-            <button type="submit" className="login-btn">
-              Register
+            <button type="submit" className="login-btn" disabled={disabled}>
+              {disabled ? "Please wait..." : "Register"}
             </button>
           </form>
 
