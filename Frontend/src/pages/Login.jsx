@@ -12,17 +12,18 @@ const Login = () => {
   const [accountNumber, setAccountNumber] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Connects to Backend server  Auth Routes
 const handleLogin = async (e) => {
   e.preventDefault();
   try {
-    const res = await fetch("https://localhost:4040/totallysecure/auth/login", {
+    const res = await fetch(`${API_URL}auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: username, // or use a separate email field
+        email: username,
         password: password
       }),
     });

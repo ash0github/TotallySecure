@@ -21,12 +21,13 @@ const Register = () => {
   };
 
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // Connects to Backend server  Auth Routes
   const handleRegister = async (e) => {
   e.preventDefault();
   try {
-    const res = await fetch("https://localhost:4040/totallysecure/auth/register", {
+    const res = await fetch(`${API_URL}auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -4,8 +4,9 @@ import logo from '../assets/Logo.svg';
 import { useNavigate } from 'react-router-dom';
 
 const MFA = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [code, setCode] = useState(Array(6).fill(''));
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (value, index) => {
     if (!/^[0-9]?$/.test(value)) return;
@@ -24,7 +25,7 @@ const MFA = () => {
   const email = localStorage.getItem("email");
 
   try {
-    const res = await fetch("https://localhost:4040/totallysecure/auth/verifyOTP", {
+    const res = await fetch(`${API_URL}auth/verifyOTP`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, code: fullCode }),
