@@ -16,7 +16,7 @@ if (isRender)
 {
     mongoose.connect(process.env.MONGO_CONNECTION)
     .then(() => {
-        http.createServer(app).listen(PORT, () => {
+        http.createServer(app).listen(PORT, '0.0.0.0', () => {
         console.log(`Server running on render at ${PORT}`);
         });
     })
