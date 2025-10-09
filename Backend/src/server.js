@@ -16,7 +16,7 @@ const options = {
 
 mongoose.connect(process.env.MONGO_CONNECTION)
 .then(() => {
-    https.createServer(options, app).listen(PORT, () => {
+    https.createServer(options, app).listen(PORT, '0.0.0.0', () => {
     console.log(`Server running at https://localhost:${PORT}`);
     });
 })
