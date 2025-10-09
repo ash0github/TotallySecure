@@ -40,3 +40,4 @@ workflows:
             branches:
               only:
                 - main
+                - circleci-project-setup
