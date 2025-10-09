@@ -67,7 +67,11 @@ const Transactions = () => {
 
           <div className="form-group">
             <label>Beneficiary Account Number</label>
-            <input type="text" placeholder="Enter account number" />
+            <input type="text" 
+            placeholder="Enter account number" 
+            pattern="\d{10}"
+            title="Account number must be exactly 10 digits"
+            />
           </div>
 
           <div className="form-row">
@@ -88,7 +92,10 @@ const Transactions = () => {
 
           <div className="form-group">
             <label>SWIFT Code</label>
-            <input type="text" placeholder="Enter SWIFT code" />
+            <input type="text" placeholder="Enter SWIFT code" 
+            pattern="/id{A-Z}{8}"
+            title="Swift code must be 8 capital letters"
+            />
           </div>
 
           <div className="form-actions">
