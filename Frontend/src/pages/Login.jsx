@@ -24,7 +24,8 @@ const handleLogin = async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: username,
-        password: password
+        password: password,
+        accountNumber: accountNumber
       }),
     });
 
@@ -99,11 +100,11 @@ const handleLogin = async (e) => {
 
           <form onSubmit={handleLogin}>
             <div className="input-group">
-              <label htmlFor="username">Username</label>
+              <label htmlFor="username">Email</label>
               <input
                 type="text"
                 id="username"
-                placeholder="Enter username"
+                placeholder="Enter email"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required

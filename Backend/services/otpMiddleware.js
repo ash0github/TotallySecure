@@ -23,3 +23,15 @@ exports.sendEmail = async (email, code) => {
 
     await transporter.sendMail(mailOptions);
 };
+
+//Reg function
+exports.confirmRegMail = async (email, accountNumber) => {
+    const mailOptions = {
+        from: '"TotallySecure"<no-reply@totallysecure.com>',
+        to: email,
+        subject: 'Welcome to TotallySecure!',
+        text: `Your account: ${accountNumber} , has been registered successfully.\n\nWe look forward to having you on board. Enjoy your stay!`,
+    };
+
+    await transporter.sendMail(mailOptions);
+}

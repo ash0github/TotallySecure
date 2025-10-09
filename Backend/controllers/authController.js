@@ -4,11 +4,11 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const Account = require('../models/Account');
 const OTP = require('../models/OTP');
-const { sendEmail } = require('../services/otpMiddleware');
+const { sendEmail, confirmRegMail } = require('../services/otpMiddleware');
 
 //method to generate signed token - expiry: 15 minutes
 const generateToken = (userID) =>
-    jwt.sign({id: userID}, process.env.JWT_SECRET, {expiresIn: '900s'});
+    jwt.sign({id: userID}, process.env.JWT_SECRET, {expiresIn: '1800s'});
 
 //method to generate new account object
 const generateAccount = async (accountHolder) => {
@@ -48,7 +48,7 @@ const sendOTP = async (req, res) => {
 
 exports.register = async (req, res) => {
     //get info from request body
-    const { email, username, password } = req.body;
+    const { email, username, password, firstName, lastName, accountNumber, idNumber } = req.body;
 
     try
     {
@@ -60,16 +60,21 @@ exports.register = async (req, res) => {
         const salt = crypto.randomBytes(16).toString("hex");
 
         //combine salt and password
-        const hash = await argon2.hash(password + salt, {type: argon2.argon2id});
+        const passwordHash = await argon2.hash(password + salt, {type: argon2.argon2id});
+        const accountHash = await argon2.hash(accountNumber + salt, {type: argon2.argon2id});
+        const idHash = await argon2.hash(idNumber + salt, {type: argon2.argon2id});
 
         //initialise new user object
-        const user = new User({email, username, password: hash, salt});
+        const user = new User({email, username, password: passwordHash, salt, firstName, lastName, accountNumber: accountHash, idNumber: idHash});
         
         //save changes asynchronously
         await user.save();
 
         //create user account
         await generateAccount(user._id);
+
+        //send confirmation email
+        await confirmRegMail(email, accountNumber);
 
         //return success!
         res.status(201).json({message: "User registered successfully!"});
@@ -81,13 +86,13 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     //get info from request body
-    const { email, password } = req.body;
+    const { email, password, accountNumber } = req.body;
 
     try
     {
         //find user and validate credentials
         const user = await User.findOne({email});
-        if (!user || !(await argon2.verify(user.password, password + user.salt))){
+        if (!user || !(await argon2.verify(user.password, password + user.salt)) || !(await argon2.verify(user.accountNumber, accountNumber + user.salt))){
             return res.status(400).json({message: "Invalid credentials"});
         }
 
