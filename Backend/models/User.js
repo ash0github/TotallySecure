@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     lastName: {type: String, required: true, trim: true},
     accountNumber: {type: String, required: true},
     idNumber: {type: String, required: true, trim: true},
+    currencyPreference: {type: String, enum: ['ZAR', 'USD', 'EUR', 'GBP', 'AUD', 'JPY', 'INR'], default: 'ZAR'},
 });
 
 module.exports = mongoose.model('User', userSchema);    

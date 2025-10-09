@@ -8,7 +8,7 @@ const { sendEmail, confirmRegMail } = require('../services/otpMiddleware');
 
 //method to generate signed token - expiry: 15 minutes
 const generateToken = (userID) =>
-    jwt.sign({id: userID}, process.env.JWT_SECRET, {expiresIn: '900s'});
+    jwt.sign({id: userID}, process.env.JWT_SECRET, {expiresIn: '1800s'});
 
 //method to generate new account object
 const generateAccount = async (accountHolder) => {

@@ -5,6 +5,8 @@ const dotenv = require('dotenv');
 
 //routes
 const authRoutes = require('../routes/authRoutes');
+const transRoutes = require('../routes/transRoutes');
+const userRoutes = require('../routes/userRoutes');
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ app.use(cors({
 }));
 
 app.use("/totallysecure/auth", authRoutes);
+app.use("/totallysecure/transaction", transRoutes);
+app.use("/totallysecure/user", userRoutes);
 
 app.get('/', (req, res) => {
     res.send('TotallySecure!!');
