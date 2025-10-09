@@ -3,7 +3,7 @@ const { register, login } = require('../controllers/authController');
 const { protect } = require('../services/authMiddleware');
 
 // ⬅️ services is a sibling of routes, so '../services/...'
-const { ipAllowlist } = require('../services/ipAllowlist');
+const { ipAllowlist } = require('../services/ipAllowlist.js');
 
 const router = express.Router();
 

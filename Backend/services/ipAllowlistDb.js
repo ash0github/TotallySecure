@@ -1,5 +1,5 @@
 const ip = require('ip');
-const AllowIp = require('../models/AllowIp');
+const AllowIp = require('../models/AllowIp.js');
 
 const REFRESH_MS = Number(process.env.ALLOWLIST_REFRESH_MS || 15000);
 const DEBUG = !!process.env.ALLOWLIST_DEBUG;

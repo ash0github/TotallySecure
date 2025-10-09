@@ -16,11 +16,11 @@ app.get("/", (_req, res) => res.send("TotallySecure backend is running. Try /tot
 app.get("/totallysecure/ping", (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
 // 1) Admin allowlist API (TOKEN PROTECTED) — mounted BEFORE the IP gate
-const adminAllowlistRoutes = require("../routes/adminAllowlistRoutes");
+const adminAllowlistRoutes = require("../routes/adminAllowlistRoutes.js/index.js");
 app.use("/totallysecure/admin/allowlist", adminAllowlistRoutes);
 
 // 2) IP gate for the rest of /totallysecure
-const { ipAllowlistDb } = require("../services/ipAllowlistDb");
+const { ipAllowlistDb } = require("../services/ipAllowlistDb.js");
 app.use("/totallysecure", ipAllowlistDb());
 
 // 3) Your other /totallysecure routes
