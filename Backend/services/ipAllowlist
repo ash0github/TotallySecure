@@ -1,0 +1,36 @@
+// Backend/services/ipAllowlist.js
+const ip = require('ip');
+
+function buildAllowlist() {
+  const raw = (process.env.ALLOWED_IPS || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+  const singles = [], cidrs = [];
+  for (const e of raw) (e.includes('/') ? cidrs : singles).push(e);
+  return { singles, cidrs };
+}
+
+function isAllowed(addr, allow) {
+  if (!addr) return false;
+  const a = addr.replace(/^::ffff:/, '');        // normalize IPv4-in-IPv6
+  if (allow.singles.includes(a)) return true;
+  for (const block of allow.cidrs) {
+    try { if (ip.cidrSubnet(block).contains(a)) return true; } catch {}
+  }
+  return false;
+}
+
+function ipAllowlist() {
+  const allow = buildAllowlist(); // read once at startup
+  return (req, res, next) => {
+    const fwd = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+    const remote = fwd || req.socket.remoteAddress || '';
+    if (!isAllowed(remote, allow)) {
+      return res.status(403).send('Forbidden (IP not allowlisted)');
+    }
+    next();
+  };
+}
+
+module.exports = { ipAllowlist };

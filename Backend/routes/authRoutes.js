@@ -1,17 +1,16 @@
 const express = require('express');
-const {register, login} = require('../controllers/authController');
-const {protect} = require('../services/authMiddleware');
+const { register, login } = require('../controllers/authController');
+const { protect } = require('../services/authMiddleware');
+const { ipAllowlist } = require('../src/services/ipAllowlist'); // adjust path if needed
 
 const router = express.Router();
 
-router.post("/register", register);
-router.post("/login", login);
+router.post('/register', register);
+router.post('/login', login);
 
-router.get("/protected", protect, (req, res) => {
-    res.json({
-        message: `Welcome to our TotallySecure route! You have accessed protected data.`,
-        timestamp: new Date(),
-    })
+// IP allowlist + your existing auth guard
+router.get('/protected', ipAllowlist(), protect, (req, res) => {
+  res.json({ message: 'Protected OK', ip: req.ip, ts: new Date() });
 });
 
 module.exports = router;
