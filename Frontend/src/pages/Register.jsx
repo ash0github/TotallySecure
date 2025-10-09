@@ -163,6 +163,8 @@ const Register = () => {
                 value={formData.idNumber}
                 onChange={handleChange}
                 required
+                pattern="\d{13}"
+                title="Account number must be exactly 13 digits"
               />
             </div>
 
@@ -176,6 +178,8 @@ const Register = () => {
                 value={formData.accountNumber}
                 onChange={handleChange}
                 required
+                pattern="\d{10}"
+                title="Account number must be exactly 10 digits"
               />
             </div>
 
