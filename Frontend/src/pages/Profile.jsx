@@ -5,16 +5,29 @@ import passwordEye from '../assets/password_eye.svg';
 import iconsBackground from '../assets/icons_background.svg';
 import { useNavigate } from 'react-router-dom';
 
-const Profile = () => {
+const Profile = ({ user }) => {
     const navigate = useNavigate();
     const [showAddFunds, setShowAddFunds] = useState(false);
     const openAddFunds = () => setShowAddFunds(true);
     const closeAddFunds = () => setShowAddFunds(false);
     const [showPassword, setShowPassword] = useState(false);
     const actualPassword = 'securePass123'; // Replace with actual password logic
+    const [currentBalance, setCurrentBalance] = useState(user?.balance || 6370.25); // dynamic
+    const [amountToAdd, setAmountToAdd] = useState(0); // track input in modal 
+
+    // Input handler
+    const handleAmountChange = (e) => {
+    setAmountToAdd(Number(e.target.value)); // convert to number
+    };
+
+    // When user clicks Complete
+    const handleCompleteAddFunds = () => {
+    setCurrentBalance(prev => prev + amountToAdd); // update balance
+    setAmountToAdd(0); // reset modal input
+    closeAddFunds();
+    };
 
   // Toggle password visibility
-
     const togglePassword = () => {
     setShowPassword(prev => !prev);
   };
@@ -86,7 +99,7 @@ const Profile = () => {
                 <h3>Current Balance</h3>
 
                 <div className="balance-amount-box">
-                    R 6370.25
+                   R {currentBalance.toFixed(2)}
                 </div>
 
                 <div className="balance-actions">
@@ -96,25 +109,42 @@ const Profile = () => {
             </div>
 
             {/* Add Funds Modal */}
-             {showAddFunds && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h3>Add Funds</h3>
-                        </div>
-                        <label htmlFor="amount">Amount:</label>
-                        <input type="number" id="amount" className="modal-input" placeholder="Enter amount" />
+                    {showAddFunds && (
+                        <div className="modal-overlay">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h3>Add Funds</h3>
+                                </div>
 
-                        <label htmlFor="updated-balance">Your updated balance:</label>
-                        <input type="text" id="updated-balance" className="modal-input" disabled />
+                                <label htmlFor="amount">Amount:</label>
+                                <input
+                                    type="number"
+                                    id="amount"
+                                    className="modal-input"
+                                    placeholder="Enter amount"
+                                    value={amountToAdd === 0 ? '' : amountToAdd}
+                                    onChange={handleAmountChange}
+                                />
 
-                        <div className="modal-actions">
-                            <button className="cancel-button" onClick={closeAddFunds}>Cancel</button>
-                            <button className="complete-button">Complete</button>
+                                <label htmlFor="updated-balance">Your updated balance:</label>
+                                <input
+                                    type="text"
+                                    id="updated-balance"
+                                    className="modal-input"
+                                    disabled
+                                    value={`R ${(currentBalance + amountToAdd).toFixed(2)}`}
+                                />
+
+                                <div className="modal-actions">
+                                    <button className="cancel-button"  onClick={() => {
+                                        setAmountToAdd(0);  // reset input when closing
+                                        closeAddFunds();
+                                    }}>Cancel</button>
+                                    <button className="complete-button" onClick={handleCompleteAddFunds}>Complete</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-             )}
+                    )}
 
             {/* Security Card */}
             <div className="profile-card">
