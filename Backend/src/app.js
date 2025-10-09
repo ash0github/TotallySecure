@@ -1,40 +1,34 @@
-// Backend/src/app.js
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 require('dotenv').config();
 
-const { ipAllowlist } = require('./services/ipAllowlist');
+// ⬅️ services is OUTSIDE src, so go up one level:
+const { ipAllowlist } = require('../services/ipAllowlist');
 
 const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(cors({
-  origin: "https://localhost:4114", // adjust for your real frontend in prod
+  origin: "https://localhost:4114", // change to your real frontend in prod
   credentials: true
 }));
 
-// Public health endpoint
-app.get('/totallysecure/ping', (req, res) => res.json({ ok: true }));
-
-// ✅ Protect everything under /totallysecure/admin/*
-app.use('/totallysecure/admin', ipAllowlist());
-
-// Test protected route
-app.get('/totallysecure/admin/health', (req, res) => {
-  res.json({ ok: true, ip: req.ip, area: 'admin' });
-});
-
-// Public health check
-app.get('/totallysecure/ping', (req, res) => {
+// Public health check (no allowlist)
+app.get('/totallysecure/ping', (_req, res) => {
   res.json({ ok: true, time: new Date().toISOString() });
 });
 
+// Your existing user routes
+const authRoutes = require('../routes/authRoutes');
+app.use('/totallysecure/auth', authRoutes);
 
-//existing routes
-try {
-  const authRoutes = require('../routes/authRoutes');
-  app.use('/totallysecure/auth', authRoutes);
-} catch {}
+/*
+ * If you want a separate admin area, uncomment these two lines
+ * after creating Backend/routes/adminRoutes.js:
+ *
+ * const adminRoutes = require('../routes/adminRoutes');
+ * app.use('/totallysecure/admin', ipAllowlist(), adminRoutes);
+ */
 
 module.exports = app;
