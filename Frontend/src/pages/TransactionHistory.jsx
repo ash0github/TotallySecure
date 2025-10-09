@@ -1,7 +1,7 @@
 import React from "react";
 import Sidebar from "../components/Sidebar";
 import "../styles/TransactionHistory.css";
-
+import iconsBackground from '../assets/icons_background.svg';
 
 const mockTransactions = [
   {
@@ -46,6 +46,7 @@ const TransactionHistory = () => {
 
       {/* Main Content */}
       <div className="transactions-main transaction-history">
+        
         {/* Header */}
         <div className="history-header">
           <h1>Transaction History</h1>
@@ -62,7 +63,7 @@ const TransactionHistory = () => {
           <div className="table-label">History</div>
           <table className="history-table">
             <thead>
-              <tr>
+              <tr className="header-row">
                 <th>Date</th>
                 <th>Amount</th>
                 <th>Beneficiary Name</th>
