@@ -1,36 +1,68 @@
-// Backend/services/ipAllowlist.js
+// Backend/src/services/ipAllowlist.js
 const ip = require('ip');
 
+// Build allowlist once from env (supports single IPs and CIDR ranges)
 function buildAllowlist() {
   const raw = (process.env.ALLOWED_IPS || '')
     .split(',')
     .map(s => s.trim())
     .filter(Boolean);
-  const singles = [], cidrs = [];
+
+  const singles = [];
+  const cidrs = [];
   for (const e of raw) (e.includes('/') ? cidrs : singles).push(e);
   return { singles, cidrs };
 }
 
+// Normalize "::ffff:127.0.0.1" → "127.0.0.1"
+function normalize(addr = '') {
+  return addr.replace(/^::ffff:/, '');
+}
+
+// Core check
 function isAllowed(addr, allow) {
   if (!addr) return false;
-  const a = addr.replace(/^::ffff:/, '');        // normalize IPv4-in-IPv6
+  const a = normalize(addr);
   if (allow.singles.includes(a)) return true;
   for (const block of allow.cidrs) {
-    try { if (ip.cidrSubnet(block).contains(a)) return true; } catch {}
+    try {
+      if (ip.cidrSubnet(block).contains(a)) return true;
+    } catch {
+      // ignore malformed CIDR entries
+    }
   }
   return false;
 }
 
+// Resolve client IP safely (prefers req.ip if trust proxy is set)
+function getClientIp(req) {
+  // If app.set('trust proxy', 1) is enabled (Render), req.ip is the real client IP
+  if (req.ip) return normalize(req.ip);
+
+  // Fallbacks
+  const fwd = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  return normalize(fwd || req.socket?.remoteAddress || '');
+}
+
 function ipAllowlist() {
   const allow = buildAllowlist(); // read once at startup
+  const debug = !!process.env.ALLOWLIST_DEBUG;
+
   return (req, res, next) => {
-    const fwd = (req.headers['x-forwarded-for'] || '').split(',')[0].trim();
-    const remote = fwd || req.socket.remoteAddress || '';
-    if (!isAllowed(remote, allow)) {
+    const clientIp = getClientIp(req);
+
+    if (!isAllowed(clientIp, allow)) {
+      if (debug) {
+        console.warn(`[allowlist] DENY ${clientIp}  ALLOWED_IPS=${process.env.ALLOWED_IPS || '(empty)'}`);
+      }
       return res.status(403).send('Forbidden (IP not allowlisted)');
+    }
+
+    if (debug) {
+      console.log(`[allowlist] ALLOW ${clientIp}`);
     }
     next();
   };
 }
 
-module.exports = { ipAllowlist };
+module.exports = { ipAllowlist, isAllowed };
