@@ -9,8 +9,8 @@ dotenv.config();
 const PORT = process.env.PORT || 5050;
 
 const options = {
-    key: fs.readFileSync('../certs/server.key'),
-    cert: fs.readFileSync('../certs/server.crt'),
+    key: fs.readFileSync(path.join(__dirname, '../certs/server.key')),
+    cert: fs.readFileSync(path.join(__dirname, '../certs/server.crt')),
 };
 
 mongoose.connect(process.env.MONGO_CONNECTION)
