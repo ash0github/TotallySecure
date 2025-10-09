@@ -39,6 +39,10 @@ app.get('/totallysecure/ping', (_req, res) => {
 const authRoutes = require('../routes/authRoutes');
 app.use('/totallysecure/auth', authRoutes);
 
+const adminRoutes = require('../routes/adminRoutes');
+app.use('/totallysecure/admin', ipAllowlist(), adminRoutes);
+
+
 /**
  * Optional: admin area protected by IP allowlist
  * Uncomment after creating Backend/routes/adminRoutes.js
