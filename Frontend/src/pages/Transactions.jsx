@@ -6,10 +6,16 @@ import { useNavigate } from 'react-router-dom';
 const Transactions = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const toggleDropdown = () => setShowDropdown(prev => !prev);
+  const [selectedCurrency, setSelectedCurrency] = useState('ZAR'); // default currency
   const navigate = useNavigate();
 
    const handleContinue = () => {
     navigate('/confirm-transfer');
+  };
+
+    const handleCurrencySelect = (currency) => {
+    setSelectedCurrency(currency);
+    setShowDropdown(false); // close dropdown after selection
   };
 
   return (
@@ -20,23 +26,44 @@ const Transactions = () => {
           <div className="transfer-header">Transfer</div>
 
         <form className="transfer-form">
-          <div className="currency-selector-wrapper">
-          <div className="currency-selector">
-            <button className="currency-button">ZAR</button>
-            <button className="currency-button">USD</button>
-            <button className="currency-button">EUR</button>
-            <button className="currency-button">AUD</button>
-              <button type="button" className="currency-dropdown-button" onClick={toggleDropdown}>▼</button>
-          </div>
-          
-          {showDropdown && (
-            <div className="currency-dropdown-list">
-              <button className="currency-button">AED</button>
-              <button className="currency-button">BOB</button>
-              <button className="currency-button">GBP</button>
+            {/* Currency Selector */}
+            <div className="currency-selector-wrapper">
+              <div className="currency-buttons-row">
+                {['ZAR', 'USD', 'EUR', 'AUD'].map((currency) => (
+                  <button
+                    key={currency}
+                    type="button"
+                    className={`currency-button ${selectedCurrency === currency ? 'active' : ''}`}
+                    onClick={() => handleCurrencySelect(currency)}
+                  >
+                    {currency}
+                  </button>
+                ))}
+
+                <button
+                  type="button"
+                  className="currency-dropdown-button"
+                  onClick={toggleDropdown}
+                >
+                  ▼
+                </button>
+              </div>
+
+              {showDropdown && (
+                <div className="currency-dropdown-list">
+                  {['AED', 'BOB', 'GBP'].map((currency) => (
+                    <button
+                      key={currency}
+                      type="button"
+                      className={`currency-button ${selectedCurrency === currency ? 'active' : ''}`}
+                      onClick={() => handleCurrencySelect(currency)}
+                    >
+                      {currency}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-          </div>
 
           <div className="form-group">
             <label>Beneficiary Account Number</label>

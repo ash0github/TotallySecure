@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserDashboard from './pages/UserDashboard';
@@ -24,6 +24,10 @@ function App() {
 
       <Route path="/profile" element={<Profile />} />
       <Route path="/mfa" element={<MFA />} />
+
+      {/* catch for unknown routes */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+
     </Routes>
   );
 }

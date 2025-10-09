@@ -128,69 +128,74 @@
 .currency-selector-wrapper {
   position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
-}
-
-.currency-selector {
-  display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: column;
   gap: 0.25rem;
 }
 
-.currency-button,
-.currency-dropdown-button {
+.currency-buttons-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.currency-button {
   padding: 0.5rem 1rem;
-  background-color: #f0fff0;
-  color: #006600;
   border: 1.5px solid #006600;
   border-radius: 8px;
+  background-color: #f0fff0;
+  color: #006600;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
-.currency-button:hover,
-.currency-dropdown-button:hover,
-.currency-button:focus,
-.currency-dropdown-button:focus {
+.currency-button.active {
+  background-color: #01672B;
+  color: white;
+}
+
+.currency-button:hover {
   background-color: #c8f0c8;
   font-weight: 600;
 }
 
-/* Dropdown box styling */ 
-.currency-dropdown-list { 
-  display: flex; 
-  flex-direction: 
-  column; width: 100%; 
-  background-color: white; 
-  border: 2px solid #004d00; 
-  border-top: none; 
-  border-radius: 0 0 10px 10px; 
-  padding: 0.5rem 0; 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-  animation: slideDown 1s ease-out; 
-  margin-top: -2px; } 
-  
-  /* Vertical layout */ 
-  .currency-dropdown-list 
-  .currency-button { 
-    display: block; 
-    width: 100%; 
-    padding: 0.5rem 1rem; 
-    background-color: white; 
-    color: #004d00; 
-    border: none; 
-    text-align: left; 
-    font-size: 1rem; 
-    cursor: pointer; 
-    transition: background-color 0.2s ease; } 
-    
-    .currency-dropdown-list 
-    .currency-button:hover { 
-      background-color: #e6ffe6; 
-      font-weight: bold; } 
+.currency-dropdown-button {
+  padding: 0.5rem 1rem;
+  border: 1.5px solid #006600;
+  border-radius: 8px;
+  background-color: #f0fff0;
+  color: #006600;
+  cursor: pointer;
+}
+
+.currency-dropdown-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: white;
+  border: 2px solid #004d00;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 0.5rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.3s ease-out;
+  margin-top: -2px;
+}
+
+.currency-dropdown-list .currency-button {
+  width: 100%;
+  text-align: left;
+  background-color: white;
+  color: #004d00;
+  border: none;
+}
+
+.currency-dropdown-list .currency-button:hover {
+  background-color: #e6ffe6;
+  font-weight: bold;
+}
       
     /* fade in annimation for drop down */ 
     @keyframes slideDown { 
