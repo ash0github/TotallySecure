@@ -14,10 +14,28 @@ const Profile = ({ user }) => {
     const actualPassword = 'securePass123'; // Replace with actual password logic
     const [currentBalance, setCurrentBalance] = useState(user?.balance || 6370.25); // dynamic
     const [amountToAdd, setAmountToAdd] = useState(0); // track input in modal 
+    const [error, setError] = useState(''); // store error message
 
-    // Input handler
+    // input handler
     const handleAmountChange = (e) => {
-    setAmountToAdd(Number(e.target.value)); // convert to number
+    let value = e.target.value;
+
+    // remove non numerics except demcimals
+    value = value.replace(/[^0-9.]/g, '');
+
+    // parse to float
+    const numericValue = parseFloat(value);
+
+    if (value === '') {
+        setAmountToAdd(0);
+        setError('');
+    } else if (isNaN(numericValue) || numericValue < 0) {
+        setAmountToAdd(0);
+        setError('Please enter a valid positive number');
+    } else {
+        setAmountToAdd(numericValue);
+        setError('');
+    }
     };
 
     // When user clicks Complete
@@ -115,7 +133,7 @@ const Profile = ({ user }) => {
                                 <div className="modal-header">
                                     <h3>Add Funds</h3>
                                 </div>
-
+                              <div className="modal-body">
                                 <label htmlFor="amount">Amount:</label>
                                 <input
                                     type="number"
@@ -125,6 +143,9 @@ const Profile = ({ user }) => {
                                     value={amountToAdd === 0 ? '' : amountToAdd}
                                     onChange={handleAmountChange}
                                 />
+
+                                {/* Error message */}
+                                {error && <p style={{ color: 'red', marginTop: '0.25rem', fontSize: '0.9rem' }}>{error}</p>}
 
                                 <label htmlFor="updated-balance">Your updated balance:</label>
                                 <input
@@ -140,10 +161,19 @@ const Profile = ({ user }) => {
                                         setAmountToAdd(0);  // reset input when closing
                                         closeAddFunds();
                                     }}>Cancel</button>
-                                    <button className="complete-button" onClick={handleCompleteAddFunds}>Complete</button>
+                                   <button
+                                        className="complete-button"
+                                        onClick={handleCompleteAddFunds}
+                                        disabled={amountToAdd <= 0 || error !== ''}
+                                        style={{
+                                        opacity: amountToAdd <= 0 || error !== '' ? 0.6 : 1,
+                                        cursor: amountToAdd <= 0 || error !== '' ? 'not-allowed' : 'pointer'
+                                        }}>Complete
+                                </button>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     )}
 
             {/* Security Card */}
