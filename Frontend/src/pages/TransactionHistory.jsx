@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import "../styles/TransactionHistory.css";
-import iconsBackground from '../assets/icons_background.svg';
-import { useState, useEffect } from "react";
+import ErrorBoundary from "../components/ErrorBoundary";
 
 const mockTransactions = [
   {
@@ -44,90 +43,98 @@ const TransactionHistory = () => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    const fetchTranscations = async () => {
-      try
-      {
+    const fetchTransactions = async () => {
+      try {
         const res = await fetch(`${API_URL}transaction/fetchTransactions`, {
-          credentials: "include", //for cookies
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
         });
 
         const data = await res.json();
         if (res.ok) {
-            if (data.transactions === undefined)
-            {
-              setTransactions(mockTransactions)
-            }
-            else
-            {
-              setTransactions(data.transactions);
-            }
-
-            console.log("✅ Transactions fetched!");
-            //alert("✅ Transactions fetched!");
-          }
-      }
-      catch (err) 
-      {
-        setTransactions(mockTransactions)
+          // use empty array if undefined
+          setTransactions(data.transactions ?? []);
+          console.log("✅ Transactions fetched!");
+        }
+      } catch (err) {
         console.error("Error fetching transactions:", err);
+        setTransactions([]); // empty array if fetch fails
       }
     };
 
-    fetchTranscations();
+    fetchTransactions();
   }, []);
 
   return (
-    <div className="transactions-wrapper">
-      
-      <Sidebar />
+    <ErrorBoundary>
+      <div className="transactions-wrapper">
+        <Sidebar />
 
-      {/* Main Content */}
-      <div className="transactions-main transaction-history">
-        
-        {/* Header */}
-        <div className="history-header">
-          <h1>Transaction History</h1>
-          <p>
-            Welcome to your <strong>Transactions History</strong>. Here you can
-            view all your past deposits, withdrawals, transfers, and payments in
-            one place. Keep track of your account activity and stay on top of
-            your finances.
-          </p>
-        </div>
+        <div className="transactions-main transaction-history">
+          {/* Header */}
+          <div className="history-header">
+            <h1>Transaction History</h1>
+            <p>
+              Welcome to your <strong>Transactions History</strong>. Here you can
+              view all your past deposits, withdrawals, transfers, and payments in
+              one place. Keep track of your account activity and stay on top of
+              your finances.
+            </p>
+          </div>
 
-        {/* Table */}
-        <div className="history-table-container">
-          <div className="table-label">History</div>
-          <table className="history-table">
-            <thead>
-              <tr className="header-row">
-                <th>Date</th>
-                <th>Currency</th>
-                <th>Amount</th>
-                <th>Beneficiary</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((txn, index) => (
-                <tr key={index}>
-                  <td>{new Date(txn.dated).toISOString().split('T')[0]}</td>
-                  <td>{txn.currency}</td>
-                  <td>{txn.amount}</td>
-                  <td>{txn.beneficiary}</td>
-                  <td>
-                    <span className={`status ${txn.status.toLowerCase()}`}>
-                      {txn.status}
-                    </span>
-                  </td>
+          {/* Table */}
+          <div className="history-table-container">
+            <div className="table-label">History</div>
+            <table className="history-table">
+              <thead>
+                <tr className="header-row">
+                  <th>Date</th>
+                  <th>Currency</th>
+                  <th>Amount</th>
+                  <th>Beneficiary</th>
+                  <th>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+             <tbody>
+                {transactions.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: "center", padding: "20px", color: "#555" }}>
+                      No transactions found.
+                    </td>
+                  </tr>
+                ) : (
+                  transactions.map((txn, index) => {
+                    // safe date parsing
+                    const rawDate = txn.date || txn.dated || "";
+                    const dateObj = new Date(rawDate);
+                    const formattedDate = !rawDate || isNaN(dateObj)
+                      ? "N/A"
+                      : `${String(dateObj.getDate()).padStart(2,"0")}/${String(dateObj.getMonth()+1).padStart(2,"0")}/${dateObj.getFullYear()}`;
+
+                    // safe beneficiary
+                    const beneficiaryName = txn.beneficiaryName || txn.beneficiary || "N/A";
+
+                    return (
+                      <tr key={index}>
+                        <td>{formattedDate}</td>
+                        <td>{txn.currency || "N/A"}</td>
+                        <td>{txn.amount || "N/A"}</td>
+                        <td>{beneficiaryName}</td>
+                        <td>
+                          <span className={`status ${txn.status?.toLowerCase() || ""}`}>
+                            {txn.status || "N/A"}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 };
 
