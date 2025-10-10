@@ -23,7 +23,15 @@ const Transactions = () => {
   };
 
   const handleContinue = () => {
-    navigate('/confirm-transfer');
+    const user = JSON.parse(localStorage.getItem('user')) || {};
+
+    navigate('/confirm-transfer', { 
+      state: { 
+        ...formData,
+        fromAccountHolder: user.name || 'Unknown User',
+        fromAccountNumber: user.accountNumber || 'N/A'
+      } 
+    });
   };
 
   const handleCurrencySelect = (currency) => {
@@ -52,8 +60,7 @@ const Transactions = () => {
       if (res.ok) {
         alert("✅ Transaction submitted!");
         console.log(data);
-        // Redirect to login
-        handleContinue();
+        handleContinue(); // navigates with formData
       } 
       else 
       {
