@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
     accountNumber: {type: String, required: true},
     idNumber: {type: String, required: true, trim: true},
     currencyPreference: {type: String, enum: ['ZAR', 'USD', 'EUR', 'GBP', 'AUD', 'JPY', 'INR'], default: 'ZAR'},
+
+    //display fields
+    concatID: {type: String, required: true},
+    concatAccn: {type: String, required: true},
 });
 
 module.exports = mongoose.model('User', userSchema);    

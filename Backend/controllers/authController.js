@@ -65,8 +65,12 @@ exports.register = async (req, res) => {
         const accountHash = await argon2.hash(accountNumber + salt, {type: argon2.argon2id});
         const idHash = await argon2.hash(idNumber + salt, {type: argon2.argon2id});
 
+        //concat fields
+        const concatID = `**********${idNumber.slice(-3)}`;
+        const concatAccn = `******${accountNumber.slice(-4)}`;
+
         //initialise new user object
-        const user = new User({email, username, password: passwordHash, salt, firstName, lastName, accountNumber: accountHash, idNumber: idHash});
+        const user = new User({email, username, password: passwordHash, salt, firstName, lastName, accountNumber: accountHash, idNumber: idHash, concatID, concatAccn});
         
         //save changes asynchronously
         await user.save();

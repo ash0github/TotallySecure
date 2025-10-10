@@ -13,6 +13,19 @@ const refreshBalance = async (id) => {
     return account.balance;
 }
 
+exports.updateInfo = async (req, res) => {
+    try
+    {
+        //get user info
+        const user = await User.findOne({userID: req.user.id});
+        if (!user) return res.status(404).json({message: "User not found"});
+
+    }
+    catch (err){
+        res.status(500).json({error: "Internal Server Error", err});
+    }
+}
+
 exports.fetchUser = async (req, res) => {
     try
     {

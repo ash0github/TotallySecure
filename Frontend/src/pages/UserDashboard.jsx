@@ -34,6 +34,8 @@ const UserDashboard = () => {
           setCompleted(data.completed);
           setPending(data.pending);
           setTransactions(data.transactions);
+          
+          console.log("✅ Dashboard fetched!");
         }
       }
       catch (err) 

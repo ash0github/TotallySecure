@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import '../styles/Profile.css';
 import passwordEye from '../assets/password_eye.svg';
@@ -7,6 +7,15 @@ import { useNavigate } from 'react-router-dom';
 
 const Profile = ({ user }) => {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [fullname, setFullname] = useState();
+  const [idNumber, setIDnumber] = useState();
+  const [accountNumber, setAccountNumber] = useState();
+  const [email, setEmail] = useState();
+  const [defaultCurrency, setDefaultCurrency] = useState();
+  const [password, setPassword] = useState();
+  const [balance, setBalance] = useState();
+
   const [showAddFunds, setShowAddFunds] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
@@ -15,7 +24,7 @@ const Profile = ({ user }) => {
   const [amountToAdd, setAmountToAdd] = useState(0);
   const [error, setError] = useState('');
 
-  const actualPassword = 'securePass123'; // Replace with actual password logic
+  const actualPassword = 'xxxxxxxxxx'; // Replace with actual password logic
 
   // Add Funds Modal
   const openAddFunds = () => setShowAddFunds(true);
@@ -52,6 +61,38 @@ const Profile = ({ user }) => {
   // Toggle password visibility
   const togglePassword = () => setShowPassword((prev) => !prev);
 
+  useEffect(() => {
+      const fetchProfile = async () => {
+        try
+        {
+          const res = await fetch(`${API_URL}user/fetchUser`, {
+            credentials: "include", //for cookies
+            headers: { "Content-Type": "application/json" },
+          });
+  
+          const data = await res.json();
+          if (res.ok) 
+          {
+            setFullname(data.user.username);
+            setIDnumber(data.user.concatID);
+            setAccountNumber(data.user.concatAccn);
+            setEmail(data.user.email);
+            setDefaultCurrency(data.user.currencyPreference);
+            setPassword(data.user.password);
+            setBalance(Number(data.balance));
+
+            console.log("✅ Profile fetched!");
+          }
+        }
+        catch (err) 
+        {
+          console.error("Error fetching user profile:", err);
+        }
+      };
+  
+      fetchProfile();
+    }, []);
+
   return (
     <div className="profile-wrapper">
       <Sidebar />
@@ -69,11 +110,10 @@ const Profile = ({ user }) => {
           {/* Profile Information */}
           <div className="profile-card">
             <h3>Profile Information</h3>
-            <div className="info-row"><span className="info-label">Full Name:</span><span className="info-value">John Doe</span></div>
-            <div className="info-row"><span className="info-label">ID Number:</span><span className="info-value">123904821</span></div>
-            <div className="info-row"><span className="info-label">Account Number:</span><span className="info-value">123091823</span></div>
-            <div className="info-row"><span className="info-label">Email Address:</span><span className="info-value">JohnDoe@gmail.com</span></div>
-            <div className="info-row"><span className="info-label">Phone Number:</span><span className="info-value">1234567890</span></div>
+            <div className="info-row"><span className="info-label">Full Name:</span><span className="info-value">{fullname}</span></div>
+            <div className="info-row"><span className="info-label">ID Number:</span><span className="info-value">{idNumber}</span></div>
+            <div className="info-row"><span className="info-label">Account Number:</span><span className="info-value">{accountNumber}</span></div>
+            <div className="info-row"><span className="info-label">Email Address:</span><span className="info-value">{email}</span></div>
           </div>
 
           {/* Preferences */}
@@ -81,7 +121,7 @@ const Profile = ({ user }) => {
             <h3>Preferences</h3>
             <div className="currency-selector-wrapper">
               <label htmlFor="currency" className="currency-label">Default Currency:</label>
-              <select id="currency" className="currency-dropdown">
+              <select id="currency" className="currency-dropdown" defaultValue={defaultCurrency}>
                 <option value="ZAR">ZAR</option>
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
@@ -96,7 +136,7 @@ const Profile = ({ user }) => {
           {/* Balance Card */}
           <div className="profile-card">
             <h3>Current Balance</h3>
-            <div className="balance-amount-box">R {currentBalance.toFixed(2)}</div>
+            <div className="balance-amount-box">R {Number(balance).toFixed(2)}</div>
             <div className="balance-actions">
               <button className="add-funds-button" onClick={openAddFunds}>Add Funds</button>
               <button className="transfer-button" onClick={() => navigate('/transactions')}>Make a Transfer</button>
@@ -109,7 +149,7 @@ const Profile = ({ user }) => {
             <div className="password-container">
               <span className="password-label">Password:</span>
               <div className="password-box">
-                <span className="password-text">{showPassword ? actualPassword : '********'}</span>
+                <span className="password-text">{showPassword ? password : '********'}</span>
                 <img
                   src={passwordEye}
                   alt="Toggle Password Visibility"
