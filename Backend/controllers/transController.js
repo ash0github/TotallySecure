@@ -30,7 +30,7 @@ exports.transact = async (req, res) => {
             swiftCode: swiftHash,
             benefactor: user._id,
             benefactorAccn: accn._id
-        })
+        });
 
         //save changes async
         await transaction.save();

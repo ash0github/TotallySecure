@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "../components/Sidebar";
 import "../styles/TransactionHistory.css";
 import iconsBackground from '../assets/icons_background.svg';
+import { useState, useEffect } from "react";
 
 const mockTransactions = [
   {
@@ -39,6 +40,35 @@ const mockTransactions = [
 ];
 
 const TransactionHistory = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fetchTranscations = async () => {
+      try
+      {
+        const res = await fetch(`${API_URL}transaction/fetchTransactions`, {
+          credentials: "include", //for cookies
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          setTransactions(data.transactions)
+          console.log("✅ Transactions fetched!");
+          //alert("✅ Transactions fetched!");
+        }
+      }
+      catch (err) 
+      {
+        setTransactions(mockTransactions)
+        console.error("Error fetching transactions:", err);
+      }
+    };
+
+    fetchTranscations();
+  }, []);
+
   return (
     <div className="transactions-wrapper">
       
@@ -65,21 +95,19 @@ const TransactionHistory = () => {
             <thead>
               <tr className="header-row">
                 <th>Date</th>
-                <th>Amount</th>
-                <th>Beneficiary Name</th>
-                <th>Beneficiary Account Number</th>
                 <th>Currency</th>
+                <th>Amount</th>
+                <th>Beneficiary</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              {mockTransactions.map((txn, index) => (
+              {transactions.map((txn, index) => (
                 <tr key={index}>
-                  <td>{txn.date}</td>
-                  <td>{txn.amount}</td>
-                  <td>{txn.beneficiaryName}</td>
-                  <td>{txn.beneficiaryAccount}</td>
+                  <td>{new Date(txn.dated).toISOString().split('T')[0]}</td>
                   <td>{txn.currency}</td>
+                  <td>{txn.amount}</td>
+                  <td>{txn.beneficiary}</td>
                   <td>
                     <span className={`status ${txn.status.toLowerCase()}`}>
                       {txn.status}

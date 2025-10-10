@@ -11,6 +11,7 @@ const ProtectedRoute = ({ children }) => {
     const checkAuth = async () => {
       try{
         const res = await fetch(`${API_URL}auth/protected`, {
+          headers: { "Content-Type": "application/json" },
           credentials: 'include'
         });
         setIsAuth(res.ok); //true if success

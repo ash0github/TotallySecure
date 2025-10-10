@@ -137,9 +137,10 @@ exports.verifyOTP = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true, //inidactes https
+            sameSite: 'none',
+            priority: 'high',
             maxAge: 30 * 60 * 1000 //30 min
-        })
-
+        });
 
         res.status(200).json({message: "Verification successful!"});
     }

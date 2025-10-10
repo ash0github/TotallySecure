@@ -29,11 +29,12 @@ const MFA = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, code: fullCode }),
+      credentials: 'include'
     });
 
     const data = await res.json();
     if (res.ok) {
-      console.log("✅ Verification successful:");
+      console.log("✅ Verification successful");
       // localStorage.setItem("token", data.token); //insecure and prone to xss attacks
       navigate("/userdashboard"); 
     } else {

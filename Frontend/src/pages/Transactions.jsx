@@ -39,7 +39,7 @@ const Transactions = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          currency: formData.currency,
+          currency: selectedCurrency || formData.currency,
           beneficiary: `${formData.firstName} ${formData.lastName}`,
           beneficiaryAccn: formData.beneficiaryAccn,
           amount: formData.amount,

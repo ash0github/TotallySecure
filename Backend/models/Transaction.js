@@ -8,6 +8,7 @@ const transactionSchema = new mongoose.Schema({
     currency: {type: String, required: true, match: /^[A-Z]{3}$/},
     salt: {type: String, required: true},
     beneficiary: {type: String, required: true},
+    beneficiaryAccn: {type: String, required: true},
     swiftCode: {type: String, required: true, trim: true}, //hashed for extra security 
     dated: {type: Date, default: Date.now},
     //Relationships
