@@ -43,12 +43,12 @@ Create .env files in both backend/ and frontend/ folders.
 
 backend/.env
 ```
-PORT=44340
+PORT=4040
 JWT_SECRET=your_jwt_secret
 ```
 frontend/.env
 ```
-VITE_API_URL=https://localhost:44340/totallysecure/
+VITE_API_URL=https://localhost:4040/totallysecure/
 ```
 
 ### 5. 🧯 Run the App
@@ -101,3 +101,4 @@ Members:
 - Fathima Shariff
 - Kayden Reddy
 - Keagan Shaw
+
