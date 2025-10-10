@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const Account = require('../models/Account');
 const OTP = require('../models/OTP');
+const cookieParser = require('cookie-parser');
 const { sendEmail, confirmRegMail } = require('../services/otpMiddleware');
 
 //method to generate signed token - expiry: 15 minutes
@@ -131,7 +132,16 @@ exports.verifyOTP = async (req, res) => {
 
         //generate token
         const token = generateToken(user.userID);
-        res.json({message: "Verification successful!", token});
+
+        //set cookie
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true, //inidactes https
+            maxAge: 30 * 60 * 1000 //30 min
+        })
+
+
+        res.status(200).json({message: "Verification successful!"});
     }
     catch (err){
         res.status(500).json({error: "Server error"});

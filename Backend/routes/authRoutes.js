@@ -12,6 +12,8 @@ router.get("/protected", protect, (req, res) => {
     res.json({
         message: `Welcome to our TotallySecure route! You have accessed protected data.`,
         timestamp: new Date(),
+        authenticated: true,
+        user: req.user,
     })
 });
 

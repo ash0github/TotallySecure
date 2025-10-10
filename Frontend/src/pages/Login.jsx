@@ -31,7 +31,7 @@ const handleLogin = async (e) => {
 
     const data = await res.json();
     if (res.ok) {
-      console.log("✅ Login successful:", data);
+      console.log("✅ Login successful:");
       // Store email for MFA verification
       localStorage.setItem("email", username);
       // Redirect to MFA page

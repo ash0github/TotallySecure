@@ -4,18 +4,66 @@ import '../styles/Transactions.css';
 import { useNavigate } from 'react-router-dom';
 
 const Transactions = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [showDropdown, setShowDropdown] = useState(false);
   const toggleDropdown = () => setShowDropdown(prev => !prev);
   const [selectedCurrency, setSelectedCurrency] = useState('ZAR'); // default currency
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+      currency: 'ZAR',
+      beneficiaryAccn: '',
+      firstName: '',
+      lastName: '',
+      amount: '',
+      swiftCode: ''
+    });
 
-   const handleContinue = () => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleContinue = () => {
     navigate('/confirm-transfer');
   };
 
-    const handleCurrencySelect = (currency) => {
+  const handleCurrencySelect = (currency) => {
     setSelectedCurrency(currency);
     setShowDropdown(false); // close dropdown after selection
+  }
+
+  // Connects to Backend server Transaction Routes
+  const handleTransaction = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${API_URL}transaction/transact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currency: formData.currency,
+          beneficiary: `${formData.firstName} ${formData.lastName}`,
+          beneficiaryAccn: formData.beneficiaryAccn,
+          amount: formData.amount,
+          swiftCode: formData.swiftCode,
+        }),
+        credentials: "include" //for cookies
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("✅ Transaction submitted!");
+        console.log(data);
+        // Redirect to login
+        handleContinue();
+      } 
+      else 
+      {
+        alert(data.message || "Transaction failed");
+      }
+    } 
+    catch (err) 
+    {
+      console.error("Error Transacting:", err);
+    }
   };
 
   return (
@@ -25,7 +73,7 @@ const Transactions = () => {
         <div className="transfer-box">
           <div className="transfer-header">Transfer</div>
 
-        <form className="transfer-form">
+        <form className="transfer-form" onSubmit={handleTransaction}>
             {/* Currency Selector */}
             <div className="currency-selector-wrapper">
               <div className="currency-buttons-row">
@@ -67,40 +115,78 @@ const Transactions = () => {
 
           <div className="form-group">
             <label>Beneficiary Account Number</label>
-            <input type="text" 
-            placeholder="Enter account number" 
-            pattern="\d{10}"
-            title="Account number must be exactly 10 digits"
+            <input 
+              type="text"
+              placeholder="Enter account number"
+              id="beneficiaryAccn"
+              name="beneficiaryAccn"
+              value={formData.beneficiaryAccn}
+              onChange={handleChange}
+              required
+              pattern="\d{10}"
+              title="Account number must be exactly 10 digits"
             />
           </div>
 
           <div className="form-row">
             <div className="form-group">
               <label>First Name</label>
-              <input type="text" placeholder="Enter first name" />
+              <input 
+                type="text"
+                placeholder="Enter first name"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
             </div>
+
             <div className="form-group">
               <label>Surname</label>
-              <input type="text" placeholder="Enter surname" />
+              <input 
+                type="text"
+                placeholder="Enter surname"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required 
+              />
             </div>
           </div>
 
           <div className="form-group">
             <label>Amount</label>
-            <input type="number" placeholder="Enter amount" />
+            <input 
+              type="number"
+              placeholder="Enter amount"
+              id="amount"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
             <label>SWIFT Code</label>
-            <input type="text" placeholder="Enter SWIFT code" 
-            pattern="/id{A-Z}{8}"
-            title="Swift code must be 8 capital letters"
+            <input 
+              type="text"
+              placeholder="Enter SWIFT code"
+              id="swiftCode"
+              name="swiftCode"
+              value={formData.swiftCode}
+              onChange={handleChange}
+              required
+              pattern="/id{A-Z}{8}"
+              title="Swift code must be 8 capital letters"
             />
           </div>
 
           <div className="form-actions">
             <button className="cancel-button">Cancel</button>
-            <button className="continue-button" onClick={handleContinue}>Continue</button>
+            <button className="continue-button" type="submit">Continue</button>
           </div>
         </form>
         </div>
@@ -110,4 +196,3 @@ const Transactions = () => {
 };
 
 export default Transactions;
-

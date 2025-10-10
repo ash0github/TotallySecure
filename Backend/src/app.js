@@ -1,4 +1,5 @@
 const express = require('express');
+const cookies = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
@@ -13,6 +14,7 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+app.use(cookies());
 app.use(helmet());
 app.use(cors({
     origin: "https://localhost:4114",

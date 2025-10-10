@@ -33,7 +33,8 @@ const MFA = () => {
 
     const data = await res.json();
     if (res.ok) {
-      localStorage.setItem("token", data.token);
+      console.log("✅ Verification successful:");
+      // localStorage.setItem("token", data.token); //insecure and prone to xss attacks
       navigate("/userdashboard"); 
     } else {
       alert(data.message || "Verification failed");
