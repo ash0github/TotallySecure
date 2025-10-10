@@ -1,12 +1,12 @@
 import React from 'react';
 
-const transactions = [
-  { date: '02/04/2025', amount: 530, currency: 'ZAR', status: 'Completed' },
-  { date: '02/04/2025', amount: 530, currency: 'ZAR', status: 'Completed' },
-  { date: '02/04/2025', amount: 530, currency: 'ZAR', status: 'Completed' },
-];
+// const transactions = [
+//   { date: '02/04/2025', amount: 530, currency: 'ZAR', status: 'Completed' },
+//   { date: '02/04/2025', amount: 530, currency: 'ZAR', status: 'Completed' },
+//   { date: '02/04/2025', amount: 530, currency: 'ZAR', status: 'Completed' },
+// ];
 
-const TransactionTable = () => (
+const TransactionTable = ({transactions}) => (
   <div className="transaction-table">
     <h2>Transaction Summary</h2>
     <table>
@@ -21,7 +21,7 @@ const TransactionTable = () => (
       <tbody>
         {transactions.map((tx, i) => (
           <tr key={i}>
-            <td>{tx.date}</td>
+            <td>{new Date(tx.dated).toISOString().split('T')[0]}</td>
             <td>{tx.amount}</td>
             <td>{tx.currency}</td>
             <td>{tx.status}</td>
