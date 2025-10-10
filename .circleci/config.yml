@@ -1,0 +1,43 @@
+version: 2.1
+
+
+orbs:
+  node: circleci/node@5.2.0
+
+jobs:
+
+  build-and-test-backend:
+   
+    docker:
+      - image: cimg/node:20.18.0
+    
+   
+    working_directory: ~/project/Backend
+
+    steps:
+    
+      - checkout:
+          path: ~/project
+
+      
+      - node/install-packages:
+          pkg-manager: npm
+         
+          app-dir: ~/project/Backend
+
+    
+      - run:
+          name: Acknowledging placeholder test script
+          command: echo "Skipping 'npm test' because it is set to fail. Please write tests."
+
+workflows:
+
+  main-workflow:
+    jobs:
+      - build-and-test-backend:
+         
+          filters:
+            branches:
+              only:
+                - main
+                - circleci-project-setup
