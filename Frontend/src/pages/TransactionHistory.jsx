@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 
 const mockTransactions = [
   {
-    date: "02/04/2025",
+    date: "2025-10-10T15:45:20.787Z",
     amount: "530",
     beneficiaryName: "Name Surname",
     beneficiaryAccount: "1233455634563",
@@ -14,7 +14,7 @@ const mockTransactions = [
     status: "Completed",
   },
   {
-    date: "02/04/2025",
+    date: "2025-10-10T15:45:20.787Z",
     amount: "250",
     beneficiaryName: "Name Surname",
     beneficiaryAccount: "1233455634563",
@@ -22,7 +22,7 @@ const mockTransactions = [
     status: "Completed",
   },
   {
-    date: "01/04/2025",
+    date: "2025-10-10T15:45:20.787Z",
     amount: "1000",
     beneficiaryName: "Name Surname",
     beneficiaryAccount: "1233455634563",
@@ -30,7 +30,7 @@ const mockTransactions = [
     status: "Completed",
   },
   {
-    date: "30/03/2025",
+    date: "2025-10-10T15:45:20.787Z",
     amount: "750",
     beneficiaryName: "Name Surname",
     beneficiaryAccount: "1233455634563",
@@ -54,10 +54,18 @@ const TransactionHistory = () => {
 
         const data = await res.json();
         if (res.ok) {
-          setTransactions(data.transactions)
-          console.log("✅ Transactions fetched!");
-          //alert("✅ Transactions fetched!");
-        }
+            if (data.transactions === undefined)
+            {
+              setTransactions(mockTransactions)
+            }
+            else
+            {
+              setTransactions(data.transactions);
+            }
+
+            console.log("✅ Transactions fetched!");
+            //alert("✅ Transactions fetched!");
+          }
       }
       catch (err) 
       {

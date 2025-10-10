@@ -6,202 +6,183 @@ import iconsBackground from '../assets/icons_background.svg';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = ({ user }) => {
-    const navigate = useNavigate();
-    const [showAddFunds, setShowAddFunds] = useState(false);
-    const openAddFunds = () => setShowAddFunds(true);
-    const closeAddFunds = () => setShowAddFunds(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const actualPassword = 'securePass123'; // Replace with actual password logic
-    const [currentBalance, setCurrentBalance] = useState(user?.balance || 6370.25); // dynamic
-    const [amountToAdd, setAmountToAdd] = useState(0); // track input in modal 
-    const [error, setError] = useState(''); // store error message
+  const navigate = useNavigate();
+  const [showAddFunds, setShowAddFunds] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
-    // input handler
-    const handleAmountChange = (e) => {
-    let value = e.target.value;
+  const [currentBalance, setCurrentBalance] = useState(user?.balance || 6370.25);
+  const [amountToAdd, setAmountToAdd] = useState(0);
+  const [error, setError] = useState('');
 
-    // remove non numerics except demcimals
-    value = value.replace(/[^0-9.]/g, '');
+  const actualPassword = 'securePass123'; // Replace with actual password logic
 
-    // parse to float
+  // Add Funds Modal
+  const openAddFunds = () => setShowAddFunds(true);
+  const closeAddFunds = () => setShowAddFunds(false);
+
+  // Coming Soon Modal
+  const openComingSoon = () => setShowComingSoon(true);
+  const closeComingSoon = () => setShowComingSoon(false);
+
+  // Input handler
+  const handleAmountChange = (e) => {
+    let value = e.target.value.replace(/[^0-9.]/g, '');
     const numericValue = parseFloat(value);
 
     if (value === '') {
-        setAmountToAdd(0);
-        setError('');
+      setAmountToAdd(0);
+      setError('');
     } else if (isNaN(numericValue) || numericValue < 0) {
-        setAmountToAdd(0);
-        setError('Please enter a valid positive number');
+      setAmountToAdd(0);
+      setError('Please enter a valid positive number');
     } else {
-        setAmountToAdd(numericValue);
-        setError('');
+      setAmountToAdd(numericValue);
+      setError('');
     }
-    };
+  };
 
-    // When user clicks Complete
-    const handleCompleteAddFunds = () => {
-    setCurrentBalance(prev => prev + amountToAdd); // update balance
-    setAmountToAdd(0); // reset modal input
+  // Complete Add Funds
+  const handleCompleteAddFunds = () => {
+    setCurrentBalance((prev) => prev + amountToAdd);
+    setAmountToAdd(0);
     closeAddFunds();
-    };
+  };
 
   // Toggle password visibility
-    const togglePassword = () => {
-    setShowPassword(prev => !prev);
-  };
+  const togglePassword = () => setShowPassword((prev) => !prev);
 
   return (
     <div className="profile-wrapper">
       <Sidebar />
       <div className="profile-main">
-        
-        {/* background image */}
-         <img
-            src={iconsBackground}
-            alt="Background Icons"
-            className="profile-background"
-        />
+        {/* Background image */}
+        <img src={iconsBackground} alt="Background Icons" className="profile-background" />
 
-          <h2 className="profile-header">Profile Settings</h2>
-          <p>Manage your profile and account settings here.
-            You can update your details, change your password, and customise preferences to keep your banking experience secure and tailored to you.
-          </p>
-          
-          {/* Profile Sections Grid */}
-          <div className="profile-grid">
-            {/* Profile Information Card */}
-            <div className="profile-card">
-                <h3>Profile Information</h3>
-                <div className="info-row">
-                    <span className="info-label">Full Name:</span>
-                    <span className="info-value">John Doe</span>
-                </div>
-                <div className="info-row">
-                    <span className="info-label">ID Number:</span>
-                    <span className="info-value">123904821</span>
-                </div>
-                <div className="info-row">
-                    <span className="info-label">Account Number:</span>
-                    <span className="info-value">123091823</span>
-                </div>
-                <div className="info-row">
-                    <span className="info-label">Email Address:</span>
-                    <span className="info-value">JohnDoe@gmail.com</span>
-                </div>
-                <div className="info-row">
-                    <span className="info-label">Phone Number:</span>
-                    <span className="info-value">1234567890</span>
-                </div>
-            </div>
+        <h2 className="profile-header">Profile Settings</h2>
+        <p>
+          Manage your profile and account settings here. You can update your details, change your password, and customise preferences to keep your banking experience secure and tailored to you.
+        </p>
 
-            {/* Preferences Card */}
-            <div className="profile-card">
-                <h3>Preferences</h3>
+        {/* Profile Sections Grid */}
+        <div className="profile-grid">
+          {/* Profile Information */}
+          <div className="profile-card">
+            <h3>Profile Information</h3>
+            <div className="info-row"><span className="info-label">Full Name:</span><span className="info-value">John Doe</span></div>
+            <div className="info-row"><span className="info-label">ID Number:</span><span className="info-value">123904821</span></div>
+            <div className="info-row"><span className="info-label">Account Number:</span><span className="info-value">123091823</span></div>
+            <div className="info-row"><span className="info-label">Email Address:</span><span className="info-value">JohnDoe@gmail.com</span></div>
+            <div className="info-row"><span className="info-label">Phone Number:</span><span className="info-value">1234567890</span></div>
+          </div>
 
-                <div className="currency-selector-wrapper">
-                    <label htmlFor="currency" className="currency-label">Default Currency:</label>
-                    <select id="currency" className="currency-dropdown">
-                    <option value="ZAR">ZAR</option>
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="GBP">GBP</option>
-                    <option value="AUD">AUD</option>
-                    <option value="JPY">JPY</option>
-                    <option value="INR">INR</option>
-                    </select>
-                </div>
-            </div>
-
-            {/* Balance Card */}
-            <div className="profile-card">
-                <h3>Current Balance</h3>
-
-                <div className="balance-amount-box">
-                   R {currentBalance.toFixed(2)}
-                </div>
-
-                <div className="balance-actions">
-                    <button className="add-funds-button" onClick={openAddFunds}>Add Funds</button>
-                    <button className="transfer-button" onClick={() => navigate('/transactions')}>Make a Transfer</button>
-                </div>
-            </div>
-
-            {/* Add Funds Modal */}
-                    {showAddFunds && (
-                        <div className="modal-overlay">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h3>Add Funds</h3>
-                                </div>
-                              <div className="modal-body">
-                                <label htmlFor="amount">Amount:</label>
-                                <input
-                                    type="number"
-                                    id="amount"
-                                    className="modal-input"
-                                    placeholder="Enter amount"
-                                    value={amountToAdd === 0 ? '' : amountToAdd}
-                                    onChange={handleAmountChange}
-                                />
-
-                                {/* Error message */}
-                                {error && <p style={{ color: 'red', marginTop: '0.25rem', fontSize: '0.9rem' }}>{error}</p>}
-
-                                <label htmlFor="updated-balance">Your updated balance:</label>
-                                <input
-                                    type="text"
-                                    id="updated-balance"
-                                    className="modal-input"
-                                    disabled
-                                    value={`R ${(currentBalance + amountToAdd).toFixed(2)}`}
-                                />
-
-                                <div className="modal-actions">
-                                    <button className="cancel-button"  onClick={() => {
-                                        setAmountToAdd(0);  // reset input when closing
-                                        closeAddFunds();
-                                    }}>Cancel</button>
-                                   <button
-                                        className="complete-button"
-                                        onClick={handleCompleteAddFunds}
-                                        disabled={amountToAdd <= 0 || error !== ''}
-                                        style={{
-                                        opacity: amountToAdd <= 0 || error !== '' ? 0.6 : 1,
-                                        cursor: amountToAdd <= 0 || error !== '' ? 'not-allowed' : 'pointer'
-                                        }}>Complete
-                                </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    )}
-
-            {/* Security Card */}
-            <div className="profile-card">
-                <h3>Security</h3>
-                
-                <div className="password-container">
-                    <span className="password-label">Password:</span>
-
-                    <div className="password-box">
-                        <span className="password-text">
-                             {showPassword ? actualPassword : '********'}
-                        </span>
-                        <img
-                            src={passwordEye}
-                            alt="Toggle Password Visibility"
-                            className="password-eye"
-                            onClick={togglePassword}
-                        />
-                    </div>
-                </div>
-                <div className="security-actions">
-                    <button className="change-password-button">Change Password</button>
-                    <button className="sign-out-button" onClick={() => navigate('/login')}>Sign Out</button>
-                </div>
+          {/* Preferences */}
+          <div className="profile-card">
+            <h3>Preferences</h3>
+            <div className="currency-selector-wrapper">
+              <label htmlFor="currency" className="currency-label">Default Currency:</label>
+              <select id="currency" className="currency-dropdown">
+                <option value="ZAR">ZAR</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="AUD">AUD</option>
+                <option value="JPY">JPY</option>
+                <option value="INR">INR</option>
+              </select>
             </div>
           </div>
+
+          {/* Balance Card */}
+          <div className="profile-card">
+            <h3>Current Balance</h3>
+            <div className="balance-amount-box">R {currentBalance.toFixed(2)}</div>
+            <div className="balance-actions">
+              <button className="add-funds-button" onClick={openAddFunds}>Add Funds</button>
+              <button className="transfer-button" onClick={() => navigate('/transactions')}>Make a Transfer</button>
+            </div>
+          </div>
+
+          {/* Security Card */}
+          <div className="profile-card">
+            <h3>Security</h3>
+            <div className="password-container">
+              <span className="password-label">Password:</span>
+              <div className="password-box">
+                <span className="password-text">{showPassword ? actualPassword : '********'}</span>
+                <img
+                  src={passwordEye}
+                  alt="Toggle Password Visibility"
+                  className="password-eye"
+                  onClick={togglePassword}
+                />
+              </div>
+            </div>
+            <div className="security-actions">
+              <button className="change-password-button" onClick={openComingSoon}>Change Password</button>
+              <button className="sign-out-button" onClick={() => navigate('/login')}>Sign Out</button>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Add Funds Modal */}
+      {showAddFunds && (
+        <div className="modal-overlay" onClick={closeAddFunds}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header"><h3>Add Funds</h3></div>
+            <div className="modal-body">
+              <label htmlFor="amount">Amount:</label>
+              <input
+                type="number"
+                id="amount"
+                className="modal-input"
+                placeholder="Enter amount"
+                value={amountToAdd === 0 ? '' : amountToAdd}
+                onChange={handleAmountChange}
+              />
+              {error && <p style={{ color: 'red', fontSize: '0.9rem' }}>{error}</p>}
+              <label htmlFor="updated-balance">Your updated balance:</label>
+              <input
+                type="text"
+                id="updated-balance"
+                className="modal-input"
+                disabled
+                value={`R ${(currentBalance + amountToAdd).toFixed(2)}`}
+              />
+              <div className="modal-actions">
+                <button className="cancel-button" onClick={closeAddFunds}>Cancel</button>
+                <button
+                  className="complete-button"
+                  onClick={handleCompleteAddFunds}
+                  disabled={amountToAdd <= 0 || error !== ''}
+                  style={{
+                    opacity: amountToAdd <= 0 || error !== '' ? 0.6 : 1,
+                    cursor: amountToAdd <= 0 || error !== '' ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  Complete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Coming Soon Modal */}
+      {showComingSoon && (
+        <div className="modal-overlay" onClick={closeComingSoon}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header"><h3>Coming Soon!</h3></div>
+            <div className="modal-body">
+              <p>This feature will be available in Part 3.</p>
+              <div className="modal-actions">
+                <button className="cancel-button" onClick={closeComingSoon}>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
