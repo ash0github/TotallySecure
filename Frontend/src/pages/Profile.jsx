@@ -53,9 +53,8 @@ const Profile = ({ user }) => {
 
   // Complete Add Funds
   const handleCompleteAddFunds = () => {
-    setCurrentBalance((prev) => prev + amountToAdd);
-    setAmountToAdd(0);
-    closeAddFunds();
+    // instead of update balance - show coming soon modal
+    setShowComingSoon(true);
   };
 
   // Toggle password visibility
