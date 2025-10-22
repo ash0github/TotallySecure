@@ -19,7 +19,12 @@ const Login = () => {
 const handleLogin = async (e) => {
   e.preventDefault();
   try {
-    const res = await fetch(`${API_URL}auth/login`, {
+    const endpoint = 'login';
+
+    if (userType === "admin")
+      endpoint = 'login/admin';
+
+    const res = await fetch(`${API_URL}auth/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

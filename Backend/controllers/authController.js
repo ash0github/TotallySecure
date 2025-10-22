@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const argon2 = require('argon2');
 const crypto = require('crypto');
 const User = require('../models/User');
+const Admin = require('../models/Admin');
 const Account = require('../models/Account');
 const OTP = require('../models/OTP');
 const cookieParser = require('cookie-parser');
@@ -98,6 +99,27 @@ exports.login = async (req, res) => {
         //find user and validate credentials
         const user = await User.findOne({email});
         if (!user || !(await argon2.verify(user.password, password + user.salt)) || !(await argon2.verify(user.accountNumber, accountNumber + user.salt))){
+            return res.status(400).json({message: "Invalid credentials"});
+        }
+
+        //send OTP
+        await sendOTP({ body: {email}}, res);
+        //res.json({message: "Login successul! Verification code sent."});
+    }
+    catch (err){
+        res.status(500).json({error: "Server error"});
+    }
+}
+
+exports.adminLogin = async (req, res) => {
+    //get info from request body
+    const { email, password, accountNumber } = req.body;
+
+    try
+    {
+        //find user and validate credentials
+        const admin = await Admin.findOne({email});
+        if (!admin || !(await argon2.verify(admin.password, password + admin.salt))){
             return res.status(400).json({message: "Invalid credentials"});
         }
 
