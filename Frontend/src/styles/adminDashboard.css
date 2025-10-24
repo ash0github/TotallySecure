@@ -28,8 +28,8 @@
 }
 
 .stats-section h1 {
-  font-size: 1.8rem;
-  padding: 10px;
+  font-size: 1.5rem;
+  padding: 1rem;
   margin-bottom: 15px;
   margin-top: 0;
   border-top-left-radius: 12px;
@@ -43,7 +43,7 @@
   gap: 30px;
   margin-bottom: 30px;
   justify-content: space-between;
-  padding: 10px;
+  padding: 1rem 1.5rem 0rem 1.5rem;
 }
 
 .stat-card {
@@ -117,14 +117,17 @@
   background-color: #01672B;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  padding: 10px;
+  padding: 1rem;
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 th, td {
