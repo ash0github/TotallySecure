@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
     username: {type: String, unique: false, required: true, trim: true},
     roles: {type: [String], default: ['user']},
     dateOfReg: {type: Date, default: Date.now},
+    lastLoggedIn: {type: Date, default: Date.now, required: true},
+    status: {type: String, enum: ['inactive', 'active'], default: 'active', required: true},
     firstName: {type: String, required: true, trim: true},
     lastName: {type: String, required: true, trim: true},
     accountNumber: {type: String, required: true},

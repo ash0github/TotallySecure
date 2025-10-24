@@ -1,7 +1,7 @@
 const Admin = require('../models/Admin');
 const User = require('../models/User');
 
-const verifyRole = (role) => {
+exports.verifyRole = (role) => {
 return async (req, res, next) => {
     try
     {
@@ -10,12 +10,15 @@ return async (req, res, next) => {
         switch (role)
         {
             case 'admin':
-                user = await Admin.findById({userID: req.user.id});
+                user = await Admin.findOne({userID: req.user.id});
                 break;
             
             case 'user':
-                user = await User.findById({userID: req.user.id});
+                user = await User.findOne({userID: req.user.id});
                 break;
+
+            default:
+                return res.status(400).json({message: 'Invalid role guard'});
         }
 
         //check if user exists in any of those roles

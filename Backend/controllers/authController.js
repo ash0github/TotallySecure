@@ -102,6 +102,29 @@ exports.login = async (req, res) => {
             return res.status(400).json({message: "Invalid credentials"});
         }
 
+        if ((Date.now() - new Date(user.lastLoggedIn).getTime()) <= 7 * 24 * 60 * 60 * 1000){
+            //generate token
+            const token = generateToken(user.userID);
+
+            //set cookie
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true, //inidactes https
+                sameSite: 'none',
+                priority: 'high',
+                maxAge: 30 * 60 * 1000 //30 min
+            });
+
+            //update lastLoggedIn
+            user.lastLoggedIn = Date.now();
+            if (user.status === 'inactive') //if status is inactive, set to active
+                user.status = 'active';
+            
+            await user.save();
+
+            return res.status(200).json({message: "Verification successful!"});
+        }
+
         //send OTP
         await sendOTP({ body: {email}}, res);
         //res.json({message: "Login successul! Verification code sent."});
@@ -113,7 +136,7 @@ exports.login = async (req, res) => {
 
 exports.adminLogin = async (req, res) => {
     //get info from request body
-    const { email, password, accountNumber } = req.body;
+    const { email, password } = req.body;
 
     try
     {
@@ -167,6 +190,13 @@ exports.verifyOTP = async (req, res) => {
             priority: 'high',
             maxAge: 30 * 60 * 1000 //30 min
         });
+
+        //update status and lastLoggedIn
+        user.lastLoggedIn = Date.now();
+        if (user.status === 'inactive') //if status is inactive, set to active
+            user.status = 'active';
+            
+        await user.save();
 
         res.status(200).json({message: "Verification successful!"});
     }

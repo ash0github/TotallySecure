@@ -50,7 +50,7 @@ exports.fetchTransactions = async (req, res) => {
         const user = await User.findOne({userID: req.user.id});
         if (!user) return res.status(404).json({message: "User not found"});
 
-        const transactions = await Transaction.find({benefactor: user._id});
+        const transactions = await Transaction.find({benefactor: user._id}).lean();
         if (!transactions.length) return res.status(244).json({message: "No Transactions"});
 
         //return success!
