@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import MFA from './pages/mfa';
 import Notifications from './pages/Notifications';
 import AdminDashboard from './pages/admin/adminDashboard';
+import UserList from './pages/admin/userList';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
 
       {/* Admin Routes */}
       <Route path="/admin/admindashboard" element={<AdminDashboard />} />
+      <Route path="/admin/userlist" element={<UserList />} />
 
       {/* catch for unknown routes */}
       <Route path="*" element={<Navigate to="/" replace />} />

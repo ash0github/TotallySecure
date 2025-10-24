@@ -1,5 +1,6 @@
 
-.transactions-wrapper {
+.transactions-wrapper,
+.userlist-wrapper {
   display: flex;
   height: 100vh;
   width: 100vw;
@@ -7,7 +8,8 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.transactions-main.transaction-history {
+.transactions-main.transaction-history,
+.userlist-content {
   padding: 1.5rem 2rem 2rem 2rem;
   max-width: 1200px;       
   margin: 0 auto;          /* Center content */
@@ -15,7 +17,8 @@
 }
 
 /* === Header section === */
-.history-header {
+.history-header,
+.user-header {
   width: 100%;          
   margin-bottom: 0;
   text-align: left;
@@ -36,7 +39,8 @@
 }
 
 /* === Table container === */
-.history-table-container {
+.history-table-container,
+.user-table-container {
   width: 100%;
   background: #fff;
   border: 1px solid #D3D4D5;       
@@ -63,7 +67,8 @@
 }
 
 /* === Table styling === */
-.history-table {
+.history-table,
+.user-table {
   flex-grow: 1;
   width: 100%; 
   min-width: 100%;           

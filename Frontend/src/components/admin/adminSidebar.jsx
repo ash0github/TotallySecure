@@ -20,11 +20,11 @@ const adminSidebar = () => {
       </div>
 
       <ul className="sidebar-menu">
-        <li onClick={() => navigate('/admindashboard')}>
+        <li onClick={() => navigate('/admin/admindashboard')}>
           <img src={homeIcon} alt="Dashboard" />
           <span>Dashboard</span>
         </li>
-        <li onClick={() => navigate('/userlist')}>
+        <li onClick={() => navigate('/admin/userlist')}>
           <img src={userlistIcon} alt="User List" />
           <span>User List</span>
         </li>
