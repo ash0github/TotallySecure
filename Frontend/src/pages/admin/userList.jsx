@@ -29,22 +29,22 @@ const UserList = () => {
 
   return (
     <ErrorBoundary>
-      <div className="transactions-wrapper">
+      <div className="userlist-wrapper">
         <Sidebar />
 
-        <div className="transactions-main transaction-history">
-          <div className="history-header">
+        <div className="userlist-content">
+          <div className="user-header">
             <h1>User List</h1>
-            <p>
-              Welcome to the Users List. This section provides administrators with a centralised view of all 
-              registered users. Review user profiles, monitor account activity, and manage permissions to ensure 
-              secure and efficient system operations.
-            </p>
+                <p>
+                Welcome to the Users List. This section provides administrators with a centralised view of all 
+                registered users. Review user profiles, monitor account activity, and manage permissions to ensure 
+                secure and efficient system operations.
+                </p>
           </div>
 
-          <div className="history-table-container">
+          <div className="user-table-container">
             <div className="table-label">Users</div>
-            <table className="history-table">
+            <table className="user-table">
               <thead>
                 <tr className="header-row">
                   <th>User ID</th>

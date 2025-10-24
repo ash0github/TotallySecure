@@ -28,7 +28,7 @@ const adminSidebar = () => {
           <img src={userlistIcon} alt="User List" />
           <span>User List</span>
         </li>
-        <li onClick={() => navigate('/admintransactions')}>
+        <li onClick={() => navigate('/admin/pendingtransactions')}>
           <img src={listIcon} alt="Transactions" />
           <span>Transactions</span>
         </li>

@@ -1,6 +1,4 @@
-
-.transactions-wrapper,
-.userlist-wrapper {
+.pending-transaction-wrapper {
   display: flex;
   height: 100vh;
   width: 100vw;
@@ -8,8 +6,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.transactions-main.transaction-history,
-.userlist-content {
+.pending-transaction-content {
   padding: 1.5rem 2rem 2rem 2rem;
   max-width: 1200px;       
   margin: 0 auto;          /* Center content */
@@ -17,23 +14,20 @@
 }
 
 /* === Header section === */
-.history-header,
-.user-header {
+.pending-tranaction-header {
   width: 100%;          
   margin-bottom: 0;
   text-align: left;
 }
 
-.history-header h1,
-.user-header h1 {
+.pending-transaction-header h1{
   color: #01672B;
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
   font-weight: 700;
 }
-
-.history-header p,  
-.user-header p {
+  
+.pending-transaction-header p{
   font-size: 1.2rem;
   color: #6c757d;
   line-height: 1.6;
@@ -41,8 +35,7 @@
 }
 
 /* === Table container === */
-.history-table-container,
-.user-table-container{
+.pending-tranaction-table-container {
   width: 100%;
   background: #fff;
   border: 1px solid #D3D4D5;       
@@ -56,21 +49,53 @@
 }
 
 /* History header above the table */
-.table-label {
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #006400;
+  padding: 0px 20px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+}
+
+.table-label {
   color: #fff;
-  padding: 12px 20px;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
   margin-bottom: 0;
 }
 
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.table-switch-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  transition: transform 0.2s ease;
+}
+
+.table-switch-btn:hover {
+  transform: scale(1.1);
+}
+
+.table-switch-btn img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
 /* === Table styling === */
-.history-table,
-.user-table {
+.pending-tranaction-table {
   flex-grow: 1;
   width: 100%; 
   min-width: 100%;           
@@ -107,34 +132,4 @@
 /* Hover effect */
 .history-table tr:hover {
   background: #f1f1f1;
-}
-
-
-.status {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 80px;
-}
-
-.status.completed {
-  background: #e6f7ed;
-  color: #28a745;
-  border: 1px solid #28a745;
-}
-
-.status.pending {
-  background: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffc107;
-}
-
-.status.failed {
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #dc3545;
 }
