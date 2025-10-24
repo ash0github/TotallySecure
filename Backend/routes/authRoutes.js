@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
-router.post("/login/admin", verifyRole('admin'), adminLogin);
+router.post("/login/admin", adminLogin);
 router.post("/verifyOTP", verifyOTP);
 
 router.get("/protected", protect, (req, res) => {

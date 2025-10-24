@@ -9,6 +9,7 @@ const adminSchema = new mongoose.Schema({
     username: {type: String, unique: false, required: true, trim: true},
     roles: {type: [String], required: true},
     dateOfReg: {type: Date, default: Date.now},
+    lastLoggedIn: {type: Date, default: Date.now, required: true},
     firstName: {type: String, required: true, trim: true},
     lastName: {type: String, required: true, trim: true},
 });

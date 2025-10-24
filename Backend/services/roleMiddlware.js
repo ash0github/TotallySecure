@@ -5,12 +5,12 @@ exports.verifyRole = (role) => {
 return async (req, res, next) => {
     try
     {
-        const user = null;
+        let user = null;
 
         switch (role)
         {
             case 'admin':
-                user = await Admin.findOne({userID: req.user.id});
+                user = await Admin.findOne({adminID: req.user.id});
                 break;
             
             case 'user':
@@ -27,7 +27,7 @@ return async (req, res, next) => {
         //check if admin and verify
         if (role === 'admin')
         {
-            const isAdmin = user.roles.some(r => r.role === 'admin');
+            const isAdmin = user.roles.includes('admin');
             if (!isAdmin) return res.status(403).json({message: "Forbidden Access"});
             return next();
         }
@@ -35,7 +35,7 @@ return async (req, res, next) => {
         //check if user and verify
         if (role === 'user')
         {
-            const isUser = user.roles.some(r => r.role === 'user');
+            const isUser = user.roles.includes('user');
             if (!isUser) return res.status(403).json({message: "Forbidden Access"});
             return next();
         }        

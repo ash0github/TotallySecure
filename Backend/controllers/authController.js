@@ -146,8 +146,31 @@ exports.adminLogin = async (req, res) => {
             return res.status(400).json({message: "Invalid credentials"});
         }
 
-        //send OTP
-        await sendOTP({ body: {email}}, res);
+        if ((Date.now() - new Date(admin.lastLoggedIn).getTime()) <= 7 * 24 * 60 * 60 * 1000){
+            //generate token
+            const token = generateToken(admin.adminID);
+
+            //set cookie
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true, //inidactes https
+                sameSite: 'none',
+                priority: 'high',
+                maxAge: 30 * 60 * 1000 //30 min
+            });
+
+            //update lastLoggedIn
+            admin.lastLoggedIn = Date.now();
+            if (admin.status === 'inactive') //if status is inactive, set to active
+                admin.status = 'active';
+            
+            await admin.save();
+
+            return res.status(200).json({message: "Verification successful!"});
+        }
+
+        //send OTP -- needs admin specific logic
+        // await sendOTP({ body: {email}}, res);
         //res.json({message: "Login successul! Verification code sent."});
     }
     catch (err){

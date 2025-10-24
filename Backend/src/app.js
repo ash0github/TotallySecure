@@ -9,6 +9,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('../routes/authRoutes');
 const transRoutes = require('../routes/transRoutes');
 const userRoutes = require('../routes/userRoutes');
+const adminRoutes = require('../routes/adminRoutes')
 
 dotenv.config();
 
@@ -44,9 +45,13 @@ const limiter = rateLimit({
 });
 app.use(limiter); //Apply globally
 
+//user and auth routes
 app.use("/totallysecure/auth", authRoutes);
 app.use("/totallysecure/transaction", transRoutes);
 app.use("/totallysecure/user", userRoutes);
+
+//admin routes
+app.use("/totallysecure/admin", adminRoutes);
 
 app.get('/', (req, res) => {
     res.send('TotallySecure!!');
