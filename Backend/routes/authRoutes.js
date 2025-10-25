@@ -1,11 +1,13 @@
 const express = require('express');
-const {register, login, verifyOTP} = require('../controllers/authController');
+const {register, login, adminLogin, verifyOTP} = require('../controllers/authController');
 const {protect} = require('../services/authMiddleware');
+const {verifyRole} = require('../services/roleMiddlware');
 
 const router = express.Router();
 
 router.post("/register", register);
 router.post("/login", login);
+router.post("/login/admin", adminLogin);
 router.post("/verifyOTP", verifyOTP);
 
 router.get("/protected", protect, (req, res) => {

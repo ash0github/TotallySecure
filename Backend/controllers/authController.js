@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const argon2 = require('argon2');
 const crypto = require('crypto');
 const User = require('../models/User');
+const Admin = require('../models/Admin');
 const Account = require('../models/Account');
 const OTP = require('../models/OTP');
 const cookieParser = require('cookie-parser');
@@ -101,8 +102,75 @@ exports.login = async (req, res) => {
             return res.status(400).json({message: "Invalid credentials"});
         }
 
+        if ((Date.now() - new Date(user.lastLoggedIn).getTime()) <= 7 * 24 * 60 * 60 * 1000){
+            //generate token
+            const token = generateToken(user.userID);
+
+            //set cookie
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true, //inidactes https
+                sameSite: 'none',
+                priority: 'high',
+                maxAge: 30 * 60 * 1000 //30 min
+            });
+
+            //update lastLoggedIn
+            user.lastLoggedIn = Date.now();
+            if (user.status === 'inactive') //if status is inactive, set to active
+                user.status = 'active';
+            
+            await user.save();
+
+            return res.status(200).json({message: "Verification successful!"});
+        }
+
         //send OTP
         await sendOTP({ body: {email}}, res);
+        //res.json({message: "Login successul! Verification code sent."});
+    }
+    catch (err){
+        res.status(500).json({error: "Server error"});
+    }
+}
+
+exports.adminLogin = async (req, res) => {
+    //get info from request body
+    const { email, password } = req.body;
+
+    try
+    {
+        //find user and validate credentials
+        const admin = await Admin.findOne({email});
+        if (!admin || !(await argon2.verify(admin.password, password + admin.salt))){
+            return res.status(400).json({message: "Invalid credentials"});
+        }
+
+        if ((Date.now() - new Date(admin.lastLoggedIn).getTime()) <= 7 * 24 * 60 * 60 * 1000){
+            //generate token
+            const token = generateToken(admin.adminID);
+
+            //set cookie
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true, //inidactes https
+                sameSite: 'none',
+                priority: 'high',
+                maxAge: 30 * 60 * 1000 //30 min
+            });
+
+            //update lastLoggedIn
+            admin.lastLoggedIn = Date.now();
+            if (admin.status === 'inactive') //if status is inactive, set to active
+                admin.status = 'active';
+            
+            await admin.save();
+
+            return res.status(200).json({message: "Verification successful!"});
+        }
+
+        //send OTP -- needs admin specific logic
+        // await sendOTP({ body: {email}}, res);
         //res.json({message: "Login successul! Verification code sent."});
     }
     catch (err){
@@ -145,6 +213,13 @@ exports.verifyOTP = async (req, res) => {
             priority: 'high',
             maxAge: 30 * 60 * 1000 //30 min
         });
+
+        //update status and lastLoggedIn
+        user.lastLoggedIn = Date.now();
+        if (user.status === 'inactive') //if status is inactive, set to active
+            user.status = 'active';
+            
+        await user.save();
 
         res.status(200).json({message: "Verification successful!"});
     }
