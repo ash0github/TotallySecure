@@ -6,7 +6,7 @@ import listIcon from '../../assets/List.svg';
 import settingsIcon from '../../assets/Settings.svg';
 import profileIcon from '../../assets/Profile.svg';
 import bellIcon from '../../assets/bellIcon.png';
-import userlistIcon from '../../assets/UserList.svg';
+import userlistIcon from '../../assets/userlist.svg';
 import '../../styles/Sidebar.css';
 
 const adminSidebar = () => {
