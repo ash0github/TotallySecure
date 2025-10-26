@@ -1,6 +1,6 @@
 const express = require('express');
 const { fetchUser, dashboard } = require('../controllers/userController');
-const {protect} = require('../services/authMiddleware');
+const { protect } = require('../services/authMiddleware');
 
 const router = express.Router();
 

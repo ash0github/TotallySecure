@@ -3,8 +3,8 @@ import '../styles/Login.css';
 import loginMoney from '../assets/login_money.svg';
 import eyeIcon from '../assets/password_eye.svg';
 import logo from '../assets/Logo.svg';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { sanitize, validateFields } from '../utils/validators';
 
 const Login = () => {
   const [userType, setUserType] = useState('customer');
@@ -15,93 +15,91 @@ const Login = () => {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // Connects to Backend server  Auth Routes
-const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await fetch(`${API_URL}auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: username,
-        password: password,
-        accountNumber: accountNumber
-      }),
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      console.log("✅ Login successful:");
-      // Store email for MFA verification
-      localStorage.setItem("email", username);
-      // Redirect to MFA page
-      navigate("/mfa");
-    } else {
-      alert(data.message || "Login failed");
-    }
-  } catch (err) {
-    console.error("Error logging in:", err);
-  }
-};
-
-  // Prevent multiple rapid clicks on login button
+  // Prevent multiple rapid clicks
   const [disabled, setDisabled] = useState(false);
   const lastClickRef = useRef(0);
+
+  // --- Submit handler with validation + sanitization (OWASP allow-list) ---
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      email: sanitize.text(username),
+      accountNumber: sanitize.digits(accountNumber),
+      password, // do not over-sanitize passwords; just validate strength on register
+    };
+
+    const v = validateFields({
+      email: payload.email,
+      accountNumber: payload.accountNumber,
+      // password: payload.password  // optional on login
+    });
+    if (!v.ok) return alert(v.message);
+
+    try {
+      const res = await fetch(`${API_URL}auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        console.log("✅ Login successful:");
+        localStorage.setItem("email", payload.email);
+        navigate("/mfa");
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (err) {
+      console.error("Error logging in:", err);
+      alert("Server error");
+    }
+  };
 
   const handleSubmit = (e) => {
     const now = Date.now();
     if (now - lastClickRef.current < 4400) {
-      console.log("⏳ Ignored rapid click");
       e.preventDefault();
       return;
     }
-
     lastClickRef.current = now;
     setDisabled(true);
-
-    setTimeout(() => {
-      setDisabled(false);
-    }, 4400);
-
+    setTimeout(() => setDisabled(false), 4400);
     handleLogin(e);
   };
 
   return (
     <div className="login-page">
-      {/* Header */}
       <header className="login-header">
         <img src={logo} alt="Totally Secure Logo" className="logo" />
         <h1>Totally $ecure</h1>
       </header>
 
-      {/* Fullscreen Panels */}
       <div className="login-panels">
-        {/* Left Panel */}
         <div className="left-panel">
           <h2>Login to Totally $ecure</h2>
-            <p>Enter your login information to proceed.</p>
+          <p>Enter your login information to proceed.</p>
 
-        {/* Falling money overlay */}
-        <div className="falling-money">
+          <div className="falling-money">
             {[...Array(40)].map((_, i) => (
-            <div
+              <div
                 key={i}
                 className="money"
                 style={{
-                left: `${Math.random() * 100}%`,
-                '--delay': `${Math.random() * 5}s`,
-                '--fall-duration': `${6 + Math.random() * 5}s`,
-                '--sway-spin-duration': `${3 + Math.random() * 3}s`,
-                '--size': `${40 + Math.random() * 40}px`
+                  left: `${Math.random() * 100}%`,
+                  '--delay': `${Math.random() * 5}s`,
+                  '--fall-duration': `${6 + Math.random() * 5}s`,
+                  '--sway-spin-duration': `${3 + Math.random() * 3}s`,
+                  '--size': `${40 + Math.random() * 40}px`
                 }}
-            >
+              >
                 <img src={loginMoney} alt="" />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right Panel */}
         <div className="right-panel">
           <div className="user-type-toggle">
             <button
@@ -120,15 +118,16 @@ const handleLogin = async (e) => {
             </button>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             <div className="input-group">
               <label htmlFor="username">Email</label>
               <input
-                type="text"
+                type="email"
                 id="username"
                 placeholder="Enter email"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setUsername(sanitize.text(e.target.value))}
+                autoComplete="username"
                 required
               />
             </div>
@@ -138,9 +137,12 @@ const handleLogin = async (e) => {
               <input
                 type="text"
                 id="accountNumber"
-                placeholder="Enter account number"
+                placeholder="9-12 digits"
                 value={accountNumber}
-                onChange={(e) => setAccountNumber(e.target.value)}
+                onChange={(e) => setAccountNumber(sanitize.digits(e.target.value).slice(0, 10))}
+                inputMode="numeric"
+                pattern="\d{9,12}"                
+                title="Account number must be exactly 9-12 digits"
                 required
               />
             </div>
@@ -154,6 +156,7 @@ const handleLogin = async (e) => {
                   placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   required
                 />
                 <img

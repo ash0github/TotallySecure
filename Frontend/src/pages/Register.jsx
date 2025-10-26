@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
-import '../styles/Login.css'; 
+import '../styles/Login.css';
 import loginMoney from '../assets/login_money.svg';
 import logo from '../assets/Logo.svg';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { sanitize, validateFields, re } from '../utils/validators';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,64 +16,79 @@ const Register = () => {
     confirmPassword: ''
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // Connects to Backend server  Auth Routes
-  const handleRegister = async (e) => {
-  e.preventDefault();
-  try {
-    const res = await fetch(`${API_URL}auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: formData.email,
-        username: `${formData.firstName} ${formData.surname}`,
-        firstName: formData.firstName,
-        lastName: formData.surname,
-        idNumber: formData.idNumber,
-        accountNumber: formData.accountNumber,
-        password: formData.password
-      }),
-    });
+  const setField = (name, value) => {
+    let v = value;
 
-    const data = await res.json();
-    if (res.ok) {
-      alert("✅ Registration successful!");
-      console.log(data);
-      // Redirect to login
-      navigate("/login");
-    } else {
-      alert(data.message || "Registration failed");
-    }
-  } catch (err) {
-    console.error("Error registering:", err);
-  }
-};
+    if (name === 'firstName' || name === 'surname') v = sanitize.text(v);
+    if (name === 'idNumber') v = sanitize.digits(v).slice(0, 13);
+    if (name === 'accountNumber') v = sanitize.digits(v).slice(0, 12);
+    if (name === 'email') v = sanitize.text(v);
+    if (name === "accountNumber") v = sanitize.digits(v).slice(0, 12);
 
-// Prevent multiple rapid clicks on Register button
+    setFormData((prev) => ({ ...prev, [name]: v }));
+  };
+
+  // Prevent rapid resubmits
   const [disabled, setDisabled] = useState(false);
   const lastClickRef = useRef(0);
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      email: formData.email,
+      username: `${formData.firstName} ${formData.surname}`.replace(/\s+/g, ' ').trim(),
+      firstName: formData.firstName,
+      lastName: formData.surname,
+      idNumber: formData.idNumber,
+      accountNumber: formData.accountNumber,
+      password: formData.password
+    };
+
+    const v = validateFields({
+      email: payload.email,
+      firstName: payload.firstName,
+      surname: payload.lastName,
+      idNumber: payload.idNumber,
+      accountNumber: payload.accountNumber,
+      password: payload.password,
+      confirmPassword: formData.confirmPassword,
+    });
+    if (!v.ok) return alert(v.message);
+
+    try {
+      const res = await fetch(`${API_URL}auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("✅ Registration successful!");
+        console.log(data);
+        navigate("/login");
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (err) {
+      console.error("Error registering:", err);
+      alert("Server error");
+    }
+  };
 
   const handleSubmit = (e) => {
     const now = Date.now();
     if (now - lastClickRef.current < 4400) {
-      console.log("⏳ Ignored rapid click");
       e.preventDefault();
       return;
     }
-
     lastClickRef.current = now;
     setDisabled(true);
-
-    setTimeout(() => {
-      setDisabled(false);
-    }, 4400);
-
+    setTimeout(() => setDisabled(false), 4400);
     handleRegister(e);
   };
 
@@ -85,34 +100,32 @@ const Register = () => {
       </header>
 
       <div className="login-panels">
-        {/* Left Panel */}
         <div className="left-panel">
           <h2>Register for Totally $ecure</h2>
           <p>Enter the required information in all fields to complete your registration.</p>
-           {/* Falling money overlay */}
-                  <div className="falling-money">
-                      {[...Array(40)].map((_, i) => (
-                      <div
-                          key={i}
-                          className="money"
-                          style={{
-                          left: `${Math.random() * 100}%`,
-                          '--delay': `${Math.random() * 5}s`,
-                          '--fall-duration': `${6 + Math.random() * 5}s`,
-                          '--sway-spin-duration': `${3 + Math.random() * 3}s`,
-                          '--size': `${40 + Math.random() * 40}px`
-                          }}
-                      >
-                          <img src={loginMoney} alt="" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
 
-        {/* Right Panel */}
+          <div className="falling-money">
+            {[...Array(40)].map((_, i) => (
+              <div
+                key={i}
+                className="money"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  '--delay': `${Math.random() * 5}s`,
+                  '--fall-duration': `${6 + Math.random() * 5}s`,
+                  '--sway-spin-duration': `${3 + Math.random() * 3}s`,
+                  '--size': `${40 + Math.random() * 40}px`
+                }}
+              >
+                <img src={loginMoney} alt="" />
+              </div>
+            ))}
+          </div>
+        </div>
+
         <div className="right-panel">
-          <form onSubmit={handleSubmit}>
-              <div className="input-row">
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="input-row">
               <div className="input-group">
                 <label htmlFor="firstName">First Name</label>
                 <input
@@ -121,7 +134,9 @@ const Register = () => {
                   name="firstName"
                   placeholder="Enter first name"
                   value={formData.firstName}
-                  onChange={handleChange}
+                  onChange={(e) => setField('firstName', e.target.value)}
+                  pattern={re.name.source}
+                  title="Letters, spaces, hyphen and apostrophe only (2–50 chars)."
                   required
                 />
               </div>
@@ -134,24 +149,26 @@ const Register = () => {
                   name="surname"
                   placeholder="Enter surname"
                   value={formData.surname}
-                  onChange={handleChange}
+                  onChange={(e) => setField('surname', e.target.value)}
+                  pattern={re.name.source}
+                  title="Letters, spaces, hyphen and apostrophe only (2–50 chars)."
                   required
                 />
               </div>
             </div>
-            
+
             <div className="input-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="Enter email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />  
-             </div>
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter email"
+                value={formData.email}
+                onChange={(e) => setField('email', e.target.value)}
+                required
+              />
+            </div>
 
             <div className="input-group">
               <label htmlFor="idNumber">ID Number</label>
@@ -159,12 +176,13 @@ const Register = () => {
                 type="text"
                 id="idNumber"
                 name="idNumber"
-                placeholder="Enter ID number"
+                placeholder="13 digits"
                 value={formData.idNumber}
-                onChange={handleChange}
-                required
+                onChange={(e) => setField('idNumber', e.target.value)}
+                inputMode="numeric"
                 pattern="\d{13}"
-                title="Account number must be exactly 13 digits"
+                title="ID number must be exactly 13 digits"
+                required
               />
             </div>
 
@@ -174,12 +192,14 @@ const Register = () => {
                 type="text"
                 id="accountNumber"
                 name="accountNumber"
-                placeholder="Enter account number"
+                placeholder="9-12 digits"
                 value={formData.accountNumber}
-                onChange={handleChange}
+                onChange={(e) => setField('accountNumber', e.target.value)}
+                inputMode="numeric"
+                pattern="\d{9,12}"
+                title="Account number must be 9–12 digits"
+
                 required
-                pattern="\d{10}"
-                title="Account number must be exactly 10 digits"
               />
             </div>
 
@@ -189,9 +209,12 @@ const Register = () => {
                 type="password"
                 id="password"
                 name="password"
-                placeholder="Enter password"
+                placeholder="8+ chars, upper/lower/digit/special"
                 value={formData.password}
-                onChange={handleChange}
+                onChange={(e) => setField('password', e.target.value)}
+                pattern={re.passwordStrong.source}
+                title="Min 8, include upper, lower, digit and special character."
+                autoComplete="new-password"
                 required
               />
             </div>
@@ -202,9 +225,10 @@ const Register = () => {
                 type="password"
                 id="confirmPassword"
                 name="confirmPassword"
-                placeholder="Enter password again"
+                placeholder="Re-enter password"
                 value={formData.confirmPassword}
-                onChange={handleChange}
+                onChange={(e) => setField('confirmPassword', e.target.value)}
+                autoComplete="new-password"
                 required
               />
             </div>
@@ -215,11 +239,10 @@ const Register = () => {
           </form>
 
           <p className="register-link">
-            Already have an account?  <Link to="/login">Login.</Link>
+            Already have an account? <Link to="/login">Login.</Link>
           </p>
         </div>
       </div>
-      
     </div>
   );
 };
