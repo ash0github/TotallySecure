@@ -3,7 +3,6 @@ import PendingTable from "./PendingTable";
 import FlaggedTable from "./FlaggedTable";
 import ApprovedTable from "./ApprovedTable";
 
-// Make sure your frontend/.env has:
 // VITE_API_URL=https://localhost:4040/totallysecure/
 const API = import.meta.env.VITE_API_URL;
 
