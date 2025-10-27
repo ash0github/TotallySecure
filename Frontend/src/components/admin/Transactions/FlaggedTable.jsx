@@ -5,21 +5,21 @@ import approveBtn from "../../../assets/approve-btn.svg";
 import approvedTransactionIcon from "../../../assets/approved-transaction-icon.svg";
 import pendingIcon from "../../../assets/pending-icon.svg";
 
-const FlaggedTable = ({ transactions, onDelete, setView }) => {
+const FlaggedTable = ({ transactions, onDelete, onApprove, setView }) => {
   return (
     <div className="flagged-transaction-table-container">
       <div className="table-header">
         <div className="table-label">Flagged Transactions</div>
-         <div className="header-actions">
+        <div className="header-actions">
           <div className="tooltip-wrapper">
             <button className="table-switch-btn" onClick={() => setView("pending")}>
-                <img src={pendingIcon} alt="Pending Transactions" />
+              <img src={pendingIcon} alt="Pending Transactions" />
             </button>
             <span className="tooltip-text">Pending Transactions</span>
           </div>
           <div className="tooltip-wrapper">
-             <button className="table-switch-btn" onClick={() => setView("approved")}>
-                <img src={approvedTransactionIcon} alt="Approved Transactions" />
+            <button className="table-switch-btn" onClick={() => setView("approved")}>
+              <img src={approvedTransactionIcon} alt="Approved Transactions" />
             </button>
             <span className="tooltip-text">Approved Transactions</span>
           </div>
@@ -64,7 +64,7 @@ const FlaggedTable = ({ transactions, onDelete, setView }) => {
                   <td>{formattedDate}</td>
                   <td>
                     <button className="action-btn" onClick={() => onApprove(tx.id)}>
-                        <img src={approveBtn} alt="Approve" className="action-icon" />
+                      <img src={approveBtn} alt="Approve" className="action-icon" />
                     </button>
                     <button className="action-btn" onClick={() => onDelete(tx.id)}>
                       <img src={deleteBtn} alt="Delete" className="action-icon" />

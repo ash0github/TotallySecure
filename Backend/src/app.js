@@ -1,15 +1,15 @@
-const express = require('express');
+const express = require('express'); 
 const cookies = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 
-//routes
+// routes
 const authRoutes = require('../routes/authRoutes');
 const transRoutes = require('../routes/transRoutes');
 const userRoutes = require('../routes/userRoutes');
-const adminRoutes = require('../routes/adminRoutes')
+const adminRoutes = require('../routes/adminRoutes');
 
 dotenv.config();
 
@@ -25,14 +25,14 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "same-origin" },
 }));
 app.use(cors({
-    origin: "https://localhost:4114",
-    credentials: true
+  origin: "https://localhost:4114",
+  credentials: true
 }));
 
-// Apply rate limiting to all requests
+// rate limit (global)
 const limiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 60 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 60 * 60 * 1000,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
@@ -43,18 +43,18 @@ const limiter = rateLimit({
     });
   }
 });
-app.use(limiter); //Apply globally
+app.use(limiter);
 
-//user and auth routes
+// user + auth routes
 app.use("/totallysecure/auth", authRoutes);
 app.use("/totallysecure/transaction", transRoutes);
 app.use("/totallysecure/user", userRoutes);
 
-//admin routes
+// admin routes
 app.use("/totallysecure/admin", adminRoutes);
 
 app.get('/', (req, res) => {
-    res.send('TotallySecure!!');
+  res.send('TotallySecure!!');
 });
 
 module.exports = app;

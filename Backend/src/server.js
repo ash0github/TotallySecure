@@ -9,16 +9,16 @@ dotenv.config();
 const PORT = process.env.PORT || 5050;
 
 const options = {
-    key: fs.readFileSync('../certs/server.key'),
-    cert: fs.readFileSync('../certs/server.crt'),
+  key: fs.readFileSync('../certs/server.key'),
+  cert: fs.readFileSync('../certs/server.crt'),
 };
 
 mongoose.connect(process.env.MONGO_CONNECTION)
-.then(() => {
+  .then(() => {
     https.createServer(options, app).listen(PORT, () => {
-    console.log(`Server running at https://localhost:${PORT}`);
+      console.log(`Server running at https://localhost:${PORT}`);
     });
-})
-.catch((err) => {
+  })
+  .catch((err) => {
     console.error('MongoDb connection failed. Error:', err);
-});
+  });
