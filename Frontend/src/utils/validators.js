@@ -47,7 +47,7 @@ export function validateFields(fields) {
     return { ok: false, message: "ID Number must be exactly 13 digits." };
   }
   if ("accountNumber" in fields && !re.accountNumber.test(fields.accountNumber)) {
-    return { ok: false, message: "Account Number must be exactly 10 digits." };
+    return { ok: false, message: "Account Number must be between 9-12 digits." };
   }
   if ("firstName" in fields && !re.name.test(fields.firstName)) {
     return { ok: false, message: "First name: letters/spaces/-/' only (2–50 chars)." };
